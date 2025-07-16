@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox  styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1">
+
+    <!-- TITLE -->
+    <Text styleClass="h2" text="Files To Generate"/>
+
+</VBox>

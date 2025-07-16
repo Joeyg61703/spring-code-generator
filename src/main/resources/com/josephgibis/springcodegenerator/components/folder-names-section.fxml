@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <!-- TITLE -->
+    <Text styleClass="h2" text="Folder Names"/>
+    <!-- DESC -->
+    <Text styleClass="description" text="Files will be generated in the folders with the corresponding names. If the folder does not exist, it will be generated"/>
+
+</VBox>

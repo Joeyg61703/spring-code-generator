@@ -1,0 +1,59 @@
+.root {
+    -fx-font-family: "Segoe UI";
+}
+
+/* === Typography === */
+
+.h1 {
+    -fx-font-size: 24px;
+    -fx-font-family: "Segoe UI Semibold";
+}
+.h2 {
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI Semibold";
+
+}
+
+.description {
+    -fx-fill: gray;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.danger {
+    -fx-fill: red;
+}
+
+/* === Containers === */
+.main-container {
+    -fx-spacing: 20;
+    -fx-padding: 20;
+}
+
+.section-container {
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+}
+
+.scroll-pane {
+    -fx-fit-to-width: true;
+    -fx-hbar-policy: never;
+}
+
+/* === Buttons === */
+.primary-button {
+    -fx-background-color: #155dfd;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI Semibold";
+
+}
+
+.primary-button:hover {
+    -fx-background-color: #193db7;
+}
+
+
