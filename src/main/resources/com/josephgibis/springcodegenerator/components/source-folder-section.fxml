@@ -3,7 +3,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="com.josephgibis.springcodegenerator.ConfigController">
 
     <!-- TITLE -->
     <Text styleClass="h2" text="Source Folder"/>
@@ -11,4 +14,17 @@
     <Text styleClass="description" text="The Folders/Files will be generated within this folder"/>
 
 
+    <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="10"/>
+        </columnConstraints>
+
+        <TextField fx:id="sourceDirectoryField"
+                   promptText="Select your project's '.../src/main/java/com/example/demo' folder"/>
+        <Button fx:id="browseFilesButton"
+                onAction="#browseSourceDirectory"
+                text="Browse" GridPane.columnIndex="1"
+        />
+    </GridPane>
 </VBox>

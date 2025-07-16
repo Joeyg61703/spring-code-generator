@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="com.josephgibis.springcodegenerator.ConfigController">
+
+    <!-- TITLE -->
+    <Text styleClass="h2" text="Package Name"/>
+    <!-- DESC -->
+    <Text styleClass="description" text="The name of the src package, this will be copied into the top of every file."/>
+
+    <TextField fx:id="basePackageField" promptText="com.example.demo"/>
+
+</VBox>

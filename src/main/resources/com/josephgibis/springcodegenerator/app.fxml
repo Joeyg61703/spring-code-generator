@@ -6,7 +6,7 @@
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
          prefHeight="600" prefWidth="800" tabClosingPolicy="UNAVAILABLE"
          xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="com.josephgibis.springcodegenerator.HelloController">
+         fx:controller="com.josephgibis.springcodegenerator.ConfigController">
     <Tab text="Project">
         <fx:include source="tabs/project-tab.fxml"/>
     </Tab>

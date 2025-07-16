@@ -3,9 +3,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.CheckBox?>
 <VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <!-- TITLE -->
     <Text styleClass="h2" text="Generation Settings"/>
+
+    <VBox spacing="8">
+        <CheckBox fx:id="overwriteFilesCheckBox" text="Overwrite existing files" styleClass="danger-checkbox"/>
+        <CheckBox fx:id="useLombokCheckBox" text="Use Lombok annotations" styleClass="checkbox"/>
+        <CheckBox fx:id="addValidationCheckBox" text="Add validation annotations" styleClass="checkbox"/>
+        <CheckBox fx:id="generateTestsCheckBox" text="Generate test files" styleClass="checkbox"/>
+    </VBox>
 
 </VBox>
