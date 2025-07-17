@@ -13,10 +13,8 @@
     <Tab text="Entity">
         <fx:include source="tabs/entity-tab.fxml"/>
     </Tab>
-    <Tab text="Preferences">
-        <fx:include source="tabs/preferences-tab.fxml"/>
+    <Tab text="Generate">
+        <fx:include source="tabs/generate-tab.fxml"/>
     </Tab>
-    <Tab text="Preview">
-        <fx:include source="tabs/preview-tab.fxml"/>
-    </Tab>
+
 </TabPane>

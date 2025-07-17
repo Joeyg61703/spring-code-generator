@@ -9,12 +9,12 @@
     <!-- TITLE -->
     <Text styleClass="h2" text="Files To Generate"/>
 
-    <VBox spacing="8">
+    <HBox spacing="8">
         <CheckBox fx:id="entityCheckBox" selected="true" text="Entity" styleClass="checkbox"/>
         <CheckBox fx:id="dtoCheckBox" selected="true" text="DTO" styleClass="checkbox"/>
         <CheckBox fx:id="repositoryCheckBox" selected="true" text="Repository" styleClass="checkbox"/>
         <CheckBox fx:id="serviceCheckBox" selected="true" text="Service" styleClass="checkbox"/>
         <CheckBox fx:id="controllerCheckBox" selected="true" text="Controller" styleClass="checkbox"/>
-    </VBox>
+    </HBox>
 
 </VBox>
