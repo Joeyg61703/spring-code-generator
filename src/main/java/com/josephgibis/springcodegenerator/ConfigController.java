@@ -96,24 +96,19 @@ public class ConfigController implements Initializable {
             return;
         }
 
-        Generator generator = new Generator(
-                config.getEntityName(),
-                config.getBasePackage(),
-                config.isUseLombok(),
-                config.isOverwriteFiles()
-        );
+        Generator generator = new Generator();
 
         if (config.isGenerateEntity()) {
-            generator.generateEntityFile(config.getEntityPackage());
+            generator.generateEntityFile();
         }
         if (config.isGenerateDto()) {
-            generator.generateDTOFile(config.getDtoPackage());
+            generator.generateDTOFile();
         }
         if (config.isGenerateRepository()) {
-            generator.generateRepositoryFile(config.getRepositoryPackage());
+            generator.generateRepositoryFile();
         }
         if (config.isGenerateService()) {
-            generator.generateServiceFile(config.getServicePackage());
+            generator.generateServiceFile();
         }
         if (config.isGenerateController()) {
             generator.generateControllerFile(config.getControllerPackage());

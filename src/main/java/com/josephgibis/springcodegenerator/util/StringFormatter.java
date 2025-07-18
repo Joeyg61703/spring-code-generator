@@ -10,6 +10,12 @@ public class StringFormatter {
         return input.substring(0, 1).toLowerCase() + input.substring(1);
     }
 
+    // (this assumes camelCase)
+    public static String makePascalCase(final String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+
     // (camelCase & PascalCase both work here)
     public static String makeSnakeCase(final String input) {
         List<String> words = getWordListFromPascalCase(input);
@@ -22,6 +28,7 @@ public class StringFormatter {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
+
 
     private static List<String> getWordListFromPascalCase(final String input) {
         StringBuilder sb = new StringBuilder();
