@@ -139,4 +139,17 @@ public class ProjectConfiguration {
     public boolean isGenerateTests() { return generateTests.get(); }
     public void setGenerateTests(boolean generateTests) { this.generateTests.set(generateTests); }
 
+    public boolean isValid() {
+        return !entityName.get().trim().isEmpty() &&
+                !basePackage.get().trim().isEmpty() &&
+                !sourceDirectory.get().trim().isEmpty();
+    }
+
+    public String getValidationError() {
+        if (entityName.get().trim().isEmpty()) return "Entity name is required";
+        if (basePackage.get().trim().isEmpty()) return "Base package is required";
+        if (sourceDirectory.get().trim().isEmpty()) return "Source directory is required";
+        return null;
+    }
+
 }

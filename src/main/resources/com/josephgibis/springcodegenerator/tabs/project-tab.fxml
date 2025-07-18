@@ -8,6 +8,7 @@
     <VBox styleClass="main-container">
         <Text styleClass="h1" text="Spring Boot Code Generator"/>
         <fx:include source="../components/source-folder-section.fxml"/>
+        <fx:include source="../components/package-name-section.fxml"/>
         <fx:include source="../components/files-to-generate-section.fxml"/>
         <fx:include source="../components/folder-names-section.fxml"/>
 

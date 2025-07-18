@@ -68,7 +68,6 @@ public class ConfigController implements Initializable {
     @FXML private TableColumn<EntityProperty, String> propertyDefaultColumn;
     @FXML private TableColumn<EntityProperty, Void> actionsColumn;
 
-    private final ObservableList<EntityProperty> properties = FXCollections.observableArrayList();
 
     @FXML
     private void browseSourceDirectory() {
@@ -92,6 +91,10 @@ public class ConfigController implements Initializable {
     @FXML
     private void generateFiles() {
         // Validate configuration
+        if (!config.isValid()) {
+            showAlert("Validation Error", config.getValidationError());
+            return;
+        }
 
         Generator generator = new Generator(
                 config.getEntityName(),
@@ -116,12 +119,13 @@ public class ConfigController implements Initializable {
             generator.generateControllerFile(config.getControllerPackage());
         }
 
-//        showAlert("Success", "Files generated successfully!");
+        showAlert("Success", "Files generated successfully!");
     }
 
 
+
     public void addProperty(ActionEvent event) {
-        properties.add(new EntityProperty());
+        config.getProperties().add(new EntityProperty());
     }
 
     @Override
@@ -130,7 +134,7 @@ public class ConfigController implements Initializable {
         setupBindings();
 
         if(propertiesTable != null) {
-            propertiesTable.setItems(properties);
+            propertiesTable.setItems(config.getProperties());
             propertiesTable.setEditable(true);
 
             propertyNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -159,7 +163,7 @@ public class ConfigController implements Initializable {
                 {
                     deleteButton.setOnAction(e -> {
                         EntityProperty property = getTableView().getItems().get(getIndex());
-                        properties.remove(property);
+                        config.getProperties().remove(property);
                     });
                     deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 16px;");
                 }
@@ -276,5 +280,13 @@ public class ConfigController implements Initializable {
         if (generateTestsCheckBox != null) {
             generateTestsCheckBox.selectedProperty().bindBidirectional(config.generateTestsProperty());
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
