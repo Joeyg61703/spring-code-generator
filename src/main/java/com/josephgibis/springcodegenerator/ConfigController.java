@@ -111,7 +111,7 @@ public class ConfigController implements Initializable {
             generator.generateServiceFile();
         }
         if (config.isGenerateController()) {
-            generator.generateControllerFile(config.getControllerPackage());
+            generator.generateControllerFile();
         }
 
         showAlert("Success", "Files generated successfully!");

@@ -2,92 +2,168 @@ package com.josephgibis.springcodegenerator.util;
 
 import com.josephgibis.springcodegenerator.EntityProperty;
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Generator {
 
-    // Get access to project configuration for entity properties
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
+    private final Configuration freeMarkerConfig = new Configuration(Configuration.VERSION_2_3_31);
 
     public Generator() {
+        freeMarkerConfig.setDefaultEncoding("UTF-8");
     }
 
-    public void generateEntityFile(){
+    private String generateFileContentFromTemplate(String templateName) {
+        try {
+            String templatePath = "/com/josephgibis/springcodegenerator/templates/" + templateName;
+            InputStream inputStream = Generator.class.getResourceAsStream(templatePath);
+            if (inputStream == null) {
+                throw new IOException("Template not found in: " + templatePath);
+            }
 
+            String templateContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            Template template = new Template(templateName, new StringReader(templateContent), freeMarkerConfig);
+
+            Map<String, Object> model = createDataModel();
+            StringWriter writer = new StringWriter();
+            template.process(model, writer);
+            return writer.toString();
+
+        } catch (IOException | TemplateException e) {
+            System.err.println("Error processing template " + templateName + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void writeToFile(String packagePath, String fileName, String fileContent) {
+        try {
+            File outputDir = new File("output");
+            if (!outputDir.exists()) {
+                outputDir.mkdirs();
+                System.out.println("Created Output Directory: " + outputDir.getAbsolutePath());
+            }
+
+            String dirPath = packagePath.replace(".", File.separator);
+            File targetDir = new File(outputDir, dirPath);
+
+            // This will generate the packages the user sets if they do not exist (entities, controllers, etc)
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
+            }
+
+            File targetFile = new File(targetDir, fileName);
+
+            if (targetFile.exists() && !config.isOverwriteFiles()) {
+                System.out.println("Failed to create file (" + fileName + "): file already exists");
+                return;
+            }
+
+            try (FileWriter fileWriter = new FileWriter(targetFile)) {
+                fileWriter.write(fileContent);
+                System.out.println("Successfully created file: " + fileName);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to create file (" + fileName + "): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void generateEntityFile() {
         String className = config.getEntityName();
         String fileName = className + ".java";
-        String filePath = config.getSourceDirectory() + File.separator + fileName;
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
-        if(config.isOverwriteFiles() && new File(filePath).isFile()){
+        try {
+            String fileContent = generateFileContentFromTemplate("Entity.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getEntityPackage();
+            writeToFile(packagePath, fileName, fileContent);
 
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("package " + config.getBasePackage() + "." + config.getEntityPackage() + ";\n");
-        appendImports(sb);
-        appendEntityAnnotations(sb);
-        sb.append("public class " + className + "{\n");
-
-        appendIdProperty(sb);
-        for(EntityProperty property : config.getProperties()){
-            appendProperty(sb, property.getName(), property.getType(), property.getDefaultValue());
-        }
-
-        for(EntityProperty property : config.getProperties()){
-            appendGetterAndSetter(sb, property.getName(), property.getType());
-        }
-
-        sb.append("}\n");
-
-        System.out.println(sb.toString());
+        } catch (Exception e) {}
     }
 
-    public void generateDTOFile(){
-        StringBuilder sb = new StringBuilder();
+    public void generateDTOFile() {
         String className = config.getEntityName() + "DTO";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("DTO.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getEntityPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {}
     }
 
-    public void generateServiceFile(){
-        StringBuilder sb = new StringBuilder();
+    public void generateServiceFile() {
         String className = config.getEntityName() + "Service";
         String fileName = className + ".java";
+
         System.out.println(timeStamp() + ": Generating " + fileName);
 
+        try {
+            String fileContent = generateFileContentFromTemplate("Service.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getServicePackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {}
     }
 
-    public void generateServiceImplFile(){
-        StringBuilder sb = new StringBuilder();
+    public void generateServiceImplFile() {
         String className = config.getEntityName() + "ServiceImpl";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("ServiceImpl.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getServicePackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {}
     }
-    public void generateControllerFile(String packageName){
-        StringBuilder sb = new StringBuilder();
+
+    public void generateControllerFile() {
         String className = config.getEntityName() + "Controller";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("Controller.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getControllerPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {}
     }
-    public void generateRepositoryFile(){
-        StringBuilder sb = new StringBuilder();
+
+    public void generateRepositoryFile() {
         String className = config.getEntityName() + "Repository";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
-    }
 
+        try {
+            String fileContent = generateFileContentFromTemplate("Repository.java.ftl");
+            String packagePath = config.getBasePackage() + "." + config.getRepositoryPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {}
+    }
 
     private String timeStamp() {
         LocalDateTime now = LocalDateTime.now();
@@ -95,97 +171,46 @@ public class Generator {
         return now.format(formatter);
     }
 
+    private Map<String, Object> createDataModel() {
+        Map<String, Object> model = new HashMap<>();
 
-    private String generateConstructor(){
-        StringBuilder sb = new StringBuilder();
+        // Package Info
+        model.put("basePackage", config.getBasePackage());
+        model.put("entityPackage", config.getEntityPackage());
+        model.put("repositoryPackage", config.getRepositoryPackage());
+        model.put("servicePackage", config.getServicePackage());
+        model.put("controllerPackage", config.getControllerPackage());
+        model.put("dtoPackage", config.getDtoPackage());
 
+        // Entity Info
+        model.put("entityName", config.getEntityName());
+        model.put("extendsClass", config.getExtendsClass());
 
-        return sb.toString();
-    }
-
-    private String addTab(String line){
-        //TODO: add a tab preference
-        return "\t" + line;
-    }
-
-    private List<String> indent(List<String> lines){
-        List<String> list = new ArrayList<String>();
-        for(String line : lines){
-            list.add(addTab(line));
+        String tableName = config.getTableName();
+        if (tableName == null || tableName.trim().isEmpty()) {
+            tableName = StringFormatter.makeSnakeCase(config.getEntityName());
         }
-        return list;
-    }
+        model.put("tableName", tableName);
 
-    private void appendImports(StringBuilder sb){
+        model.put("idType", config.getIdType());
+        model.put("idGeneration", config.getIdGeneration());
 
-    }
-
-    private void appendEntityAnnotations(StringBuilder sb){
-
-        sb.append("@Entity\n");
-
-        String tableName = StringFormatter.makeSnakeCase(config.getEntityName());
-        if(!config.getTableName().trim().isEmpty()) {
-            tableName = config.getTableName();
+        // Entity Properties
+        List<Map<String, Object>> templateProperties = new ArrayList<>();
+        for (EntityProperty prop : config.getProperties()) {
+            Map<String, Object> propMap = new HashMap<>();
+            propMap.put("name", prop.getName());
+            propMap.put("type", prop.getType());
+            propMap.put("nullable", prop.isNullable());
+            propMap.put("unique", prop.isUnique());
+            propMap.put("defaultValue", prop.getDefaultValue() != null ? prop.getDefaultValue() : "");
+            templateProperties.add(propMap);
         }
+        model.put("properties", templateProperties);
 
-        sb.append("@Table(name = \"" + tableName  + "\")\n");
+        // Generation Settings
+        model.put("useLombok", config.isUseLombok());
 
-
-        if(config.isUseLombok()){
-            sb.append("@Getter\n");
-            sb.append("@Setter\n");
-            sb.append("@AllArgsConstructor\n");
-            sb.append("@NoArgsConstructor\n");
-        }
+        return model;
     }
-
-
-
-    private void appendNoArgsConstructor(StringBuilder sb, String className){
-        if(!config.isUseLombok()){
-            sb.append("public " + className + "(){\n");
-        }
-    }
-
-    private void appendAllArgsConstructor(StringBuilder sb, String className){
-        if(!config.isUseLombok()){
-            //TODO: generate constructor params
-            sb.append("public " + className + "(){\n");
-        }
-    }
-
-    private void appendIdProperty(StringBuilder sb){
-        if(!config.isUseLombok()){
-            sb.append("@Id\n");
-            sb.append("@GeneratedValue(strategy = GenerationType." + config.getIdGeneration() +")\n");
-            sb.append("private " + config.getIdType() + " id;\n");
-        }
-    }
-
-    private void appendProperty(StringBuilder sb, String propertyName, String type, String defaultValue){
-
-        if(type.equals("String")){
-            defaultValue = "\"" + defaultValue + "\"";
-        }
-        sb.append("private " + type + " " + propertyName + " = " + defaultValue +";\n");
-    }
-
-    private void appendGetterAndSetter(StringBuilder sb, String propertyName, String type){
-
-        if(!config.isUseLombok()){
-            sb.append("public " + type + " get" + StringFormatter.makePascalCase(propertyName) + "(){\n");
-            sb.append("\treturn " + propertyName + ";\n");
-            sb.append("}\n");
-            sb.append("\n");
-
-            sb.append("public void set" + StringFormatter.makePascalCase(propertyName) + "(" + type + " " + propertyName + "){\n");
-            sb.append("\tthis." + propertyName + " = " + propertyName + ";\n");
-            sb.append("}\n");
-            sb.append("\n");
-        }
-
-    }
-
-
 }
