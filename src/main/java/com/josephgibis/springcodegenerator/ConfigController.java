@@ -21,11 +21,6 @@ public class ConfigController implements Initializable {
 
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
 
-
-    @FXML private Button addPropertyButton;
-
-    @FXML private Button browseFilesButton;
-
     // Basic info
     @FXML private TextField basePackageField;
     @FXML private TextField sourceDirectoryField;
@@ -50,8 +45,6 @@ public class ConfigController implements Initializable {
     @FXML private CheckBox addValidationCheckBox;
     @FXML private CheckBox generateTestsCheckBox;
 
-    @FXML private Button generateButton;
-
     // Entity Details
     @FXML private TextField entityNameField;
     @FXML private TextField tableNameField;
@@ -67,7 +60,6 @@ public class ConfigController implements Initializable {
     @FXML private TableColumn<EntityProperty, Boolean> propertyUniqueColumn;
     @FXML private TableColumn<EntityProperty, String> propertyDefaultColumn;
     @FXML private TableColumn<EntityProperty, Void> actionsColumn;
-
 
     @FXML
     private void browseSourceDirectory() {
@@ -90,7 +82,6 @@ public class ConfigController implements Initializable {
 
     @FXML
     private void generateFiles() {
-        // Validate configuration
         if (!config.isValid()) {
             showAlert("Validation Error", config.getValidationError());
             return;
@@ -117,17 +108,48 @@ public class ConfigController implements Initializable {
         showAlert("Success", "Files generated successfully!");
     }
 
-
-
     public void addProperty(ActionEvent event) {
         config.getProperties().add(new EntityProperty());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         setupBindings();
+        setupPropertiesTable();
+        setupIdGenerationCombo();
+        setupIdTypeCombo();
+    }
 
+    private void setupIdTypeCombo() {
+        if (idTypeCombo != null) {
+            idTypeCombo.setItems(FXCollections.observableArrayList(
+                    "Long",
+                    "UUID",
+                    "Integer",
+                    "String",
+                    "BigInteger"
+
+            ));
+            idTypeCombo.getSelectionModel().select("Long");
+        }
+    }
+
+    private void setupIdGenerationCombo() {
+        if (idGenerationCombo != null) {
+            idGenerationCombo.setItems(FXCollections.observableArrayList(
+                    "IDENTITY",
+                    "UUID",
+                    "SEQUENCE",
+                    "TABLE",
+                    "AUTO",
+                    "ASSIGNED",
+                    "NONE"
+            ));
+            idGenerationCombo.getSelectionModel().select("IDENTITY");
+        }
+    }
+
+    private void setupPropertiesTable() {
         if(propertiesTable != null) {
             propertiesTable.setItems(config.getProperties());
             propertiesTable.setEditable(true);
@@ -173,38 +195,7 @@ public class ConfigController implements Initializable {
                     }
                 }
             });
-        }
-        setupIdGenerationCombo();
-        setupIdTypeCombo();
-    }
-    private void setupIdTypeCombo() {
-        if (idTypeCombo != null) {
-            idTypeCombo.setItems(FXCollections.observableArrayList(
-                    "Long",
-                    "UUID",
-                    "Integer",
-                    "String",
-                    "BigInteger"
-
-            ));
-            idTypeCombo.getSelectionModel().select("Long");
-        }
-    }
-
-    private void setupIdGenerationCombo() {
-        if (idGenerationCombo != null) {
-            idGenerationCombo.setItems(FXCollections.observableArrayList(
-                    "IDENTITY",
-                    "UUID",
-                    "SEQUENCE",
-                    "TABLE",
-                    "AUTO",
-                    "ASSIGNED",
-                    "NONE"
-            ));
-            idGenerationCombo.getSelectionModel().select("IDENTITY");
-        }
-    }
+        }}
 
     private void setupBindings() {
         // Project Tab Bindings

@@ -28,22 +28,24 @@ import java.util.UUID;
 @RequestMapping("/api/v1/${entityName}")
 public class ${entityName?cap_first}Controller {
 
-private final ${entityName?cap_first}Service ${entityName}Service;
-private final UserInfoService userInfoService;
+    private final ${entityName?cap_first}Service ${entityName}Service;
+    private final UserInfoService userInfoService;
 
-public ${entityName?cap_first}Controller(${entityName?cap_first}Service ${entityName}Service, UserInfoService userInfoService) {
-this.${entityName}Service = ${entityName}Service;
-this.userInfoService = userInfoService;
-}
-
-@GetMapping("/")
-ResponseEntity<List<${entityName?cap_first}Dto>> get${entityName?cap_first}s(){
-    return ResponseEntity.status(HttpStatus.OK).body(${entityName}Service.getAll${entityName?cap_first}s());
+    public ${entityName?cap_first}Controller(${entityName?cap_first}Service ${entityName}Service, UserInfoService userInfoService) {
+        this.${entityName}Service = ${entityName}Service;
+        this.userInfoService = userInfoService;
     }
 
+    // GET "/api/v1/${entityName}"
+    @GetMapping("/")
+    ResponseEntity<List<${entityName?cap_first}Dto>> get${entityName?cap_first}s(){
+        return ResponseEntity.status(HttpStatus.OK).body(${entityName}Service.getAll${entityName?cap_first}s());
+    }
+
+    // GET "/api/v1/${entityName}/id"
     @GetMapping(params = "id")
     ResponseEntity<List<${entityName?cap_first}Dto>> get${entityName?cap_first}ById(@RequestParam ${idType} id){
         return ResponseEntity.status(HttpStatus.OK).body(${entityName}Service.get${entityName?cap_first}ById(id));
-        }
+    }
 
-        }
+}
