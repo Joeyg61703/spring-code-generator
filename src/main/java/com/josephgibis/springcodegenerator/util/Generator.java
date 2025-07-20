@@ -49,14 +49,15 @@ public class Generator {
 
     private void writeToFile(String packagePath, String fileName, String fileContent) {
         try {
-            File outputDir = new File("output");
-            if (!outputDir.exists()) {
-                outputDir.mkdirs();
-                System.out.println("Created Output Directory: " + outputDir.getAbsolutePath());
-            }
+//            File outputDir = new File("output");
+//            if (!outputDir.exists()) {
+//                outputDir.mkdirs();
+//                System.out.println("Created Output Directory: " + outputDir.getAbsolutePath());
+//            }
+
 
             String dirPath = packagePath.replace(".", File.separator);
-            File targetDir = new File(outputDir, dirPath);
+            File targetDir = new File(config.getSourceDirectory(), dirPath);
 
             // This will generate the packages the user sets if they do not exist (entities, controllers, etc)
             if (!targetDir.exists()) {
@@ -103,7 +104,7 @@ public class Generator {
 
         try {
             String fileContent = generateFileContentFromTemplate("DTO.java.ftl");
-            String packagePath = config.getBasePackage() + "." + config.getEntityPackage();
+            String packagePath = config.getBasePackage() + "." + config.getDtoPackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
@@ -182,8 +183,22 @@ public class Generator {
         model.put("controllerPackage", config.getControllerPackage());
         model.put("dtoPackage", config.getDtoPackage());
 
+        // assuming entityName is in pascalCase we can make other casings
+        String entityName = config.getEntityName();
+        String pluralEntityName =  StringFormatter.makePlural(entityName);
+
         // Entity Info
         model.put("entityName", config.getEntityName());
+        model.put("pluralEntityName", pluralEntityName);
+
+        model.put("entityNameCamel", StringFormatter.makeCamelCase(entityName));
+        model.put("entityNameSnake", StringFormatter.makeSnakeCase(entityName));
+        model.put("entityNamePascal", StringFormatter.makePascalCase(entityName)); //probably is the same but just nicer to read in ftl files
+
+        model.put("pluralEntityNameCamel", StringFormatter.makeCamelCase(pluralEntityName));
+        model.put("pluralEntityNameSnake", StringFormatter.makeSnakeCase(pluralEntityName)); // (my preferred table name)
+        model.put("pluralEntityNamePascal", StringFormatter.makePascalCase(pluralEntityName));
+
         model.put("extendsClass", config.getExtendsClass());
 
         String tableName = config.getTableName();

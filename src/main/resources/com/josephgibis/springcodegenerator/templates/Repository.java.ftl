@@ -1,17 +1,20 @@
 package ${basePackage}.${repositoryPackage};
 
-import ${basePackage}.${entityPackage}.${entityName};
+import ${basePackage}.${entityPackage}.${entityNamePascal};
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-
 <#if idType == "UUID">
-    import java.util.UUID;
+import java.util.UUID;
 </#if>
 
-
 @Repository
-public interface ${entityName?cap_first}Repository<${entityName?cap_first}, ${idType}> {
-    <#-- TODO: implement methods-->
+public interface ${entityNamePascal}Repository extends JpaRepository<${entityNamePascal}, ${idType}> {
+<#list properties as property>
+    <#if property.unique>
+    Optional<${entityNamePascal}> findBy${entityNamePascal}(${property.type} ${property.name});
 
+    boolean existsBy${property.name?cap_first}(${property.type} ${property.name});
+
+    </#if>
+</#list>
 }

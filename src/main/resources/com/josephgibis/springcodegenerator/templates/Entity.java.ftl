@@ -11,14 +11,14 @@ import lombok.AllArgsConstructor;
 <#if tableName?has_content>
 @Table(name = "${tableName}")
 <#else>
-@Table(name = "${entityName?lower_case}")
+@Table(name = "${pluralEntityNameSnake}")
 </#if>
 <#if useLombok>
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 </#if>
-public class ${entityName}<#if extendsClass?has_content && extendsClass != ""> extends ${extendsClass}</#if> {
+public class ${entityNamePascal}<#if extendsClass?has_content && extendsClass != ""> extends ${extendsClass}</#if> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.${idGeneration})

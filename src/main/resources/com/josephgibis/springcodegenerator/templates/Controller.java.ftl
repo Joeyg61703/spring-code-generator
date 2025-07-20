@@ -1,15 +1,14 @@
 package ${basePackage}.${controllerPackage};
 
-import ${basePackage}.${dtoPackage}.${entityName?cap_first}Dto;
+import ${basePackage}.${dtoPackage}.${entityNamePascal}Dto;
 
-import ${basePackage}.${dtoPackage}.Create${entityName?cap_first}Request;
-import ${basePackage}.${dtoPackage}..requests.Update${entityName?cap_first}Request;
+import ${basePackage}.${dtoPackage}.Create${entityNamePascal}Request;
+import ${basePackage}.${dtoPackage}.requests.Update${entityNamePascal}Request;
 
 
-import ${basePackage}.${entityPackage}.${entityName};
+import ${basePackage}.${entityPackage}.${entityNamePascal};
 
-import com.spring_postgres.demo.services.${entityName?cap_first}Service;
-import com.spring_postgres.demo.services.UserInfoService;
+import ${basePackage}.${servicePackage}.${entityNamePascal}Service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +24,32 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/${entityName}")
-public class ${entityName?cap_first}Controller {
+@RequestMapping("/api/v1/${pluralEntityNameCamel}")
+public class ${entityNamePascal}Controller {
 
-    private final ${entityName?cap_first}Service ${entityName}Service;
-    private final UserInfoService userInfoService;
+    private final ${entityNamePascal}Service ${entityNameCamel}Service;
 
-    public ${entityName?cap_first}Controller(${entityName?cap_first}Service ${entityName}Service, UserInfoService userInfoService) {
-        this.${entityName}Service = ${entityName}Service;
-        this.userInfoService = userInfoService;
+    public ${entityNamePascal}Controller(${entityNamePascal}Service ${entityNameCamel}Service) {
+        this.${entityNameCamel}Service = ${entityNameCamel}Service;
     }
 
-    // GET "/api/v1/${entityName}"
+    // GET "/api/v1/${pluralEntityNameCamel}"
     @GetMapping("/")
-    ResponseEntity<List<${entityName?cap_first}Dto>> get${entityName?cap_first}s(){
-        return ResponseEntity.status(HttpStatus.OK).body(${entityName}Service.getAll${entityName?cap_first}s());
+    ResponseEntity<List<${entityNamePascal}Dto>> get${pluralEntityNamePascal}(){
+        return ResponseEntity.status(HttpStatus.OK).body(${entityNameCamel}Service.getAll${pluralEntityNamePascal}());
     }
 
-    // GET "/api/v1/${entityName}/id"
+    // GET "/api/v1/${pluralEntityNameCamel}/id"
     @GetMapping(params = "id")
-    ResponseEntity<List<${entityName?cap_first}Dto>> get${entityName?cap_first}ById(@RequestParam ${idType} id){
-        return ResponseEntity.status(HttpStatus.OK).body(${entityName}Service.get${entityName?cap_first}ById(id));
+    ResponseEntity<List<${entityNamePascal}Dto>> get${entityNamePascal}ById(@RequestParam ${idType} id){
+        return ResponseEntity.status(HttpStatus.OK).body(${entityNameCamel}Service.get${entityNamePascal}ById(id));
+    }
+
+    // POST "/api/v1/${pluralEntityNameCamel}"
+    @PostMapping("/")
+    ResponseEntity<${entityNamePascal}Dto> create${entityNamePascal}(@RequestBody Create${entityNamePascal}Request request){
+            ${entityNamePascal}Dto created${entityNamePascal} = ${entityNameCamel}Service.create${entityNamePascal}(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created${entityNamePascal});
     }
 
 }

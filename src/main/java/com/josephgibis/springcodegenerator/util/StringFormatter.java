@@ -29,6 +29,10 @@ public class StringFormatter {
         return sb.toString();
     }
 
+    public static String makePlural(final String input) {
+        return input.charAt(input.length() - 1) == 's' ? input : input + "s";
+    }
+
 
     private static List<String> getWordListFromPascalCase(final String input) {
         StringBuilder sb = new StringBuilder();
