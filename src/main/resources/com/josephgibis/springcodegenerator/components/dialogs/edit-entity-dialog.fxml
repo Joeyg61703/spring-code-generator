@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Button?>
+<DialogPane
+        xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.josephgibis.springcodegenerator.controllers.EntityController"
+>
+    <content>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10"/>
+            </padding>
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                </columnConstraints>
+                <Label text="Entity Name:" GridPane.rowIndex="0"/>
+                <TextField fx:id="entityNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Table Name:" GridPane.rowIndex="1"/>
+                <TextField fx:id="tableNameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            </GridPane>
+            <Separator/>
+            <Label text="Properties" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="propertiesTable" editable="true" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name"/>
+                    <TableColumn fx:id="typeColumn" prefWidth="150.0" text="Type"/>
+                    <TableColumn fx:id="editColumn" prefWidth="75.0" text="Edit"/>
+                    <TableColumn fx:id="deleteColumn" prefWidth="75.0" text="Delete"/>
+                </columns>
+            </TableView>
+            <Button text="Add New Property" onAction="#addProperty" maxWidth="Infinity"/>
+        </VBox>
+    </content>
+
+</DialogPane>

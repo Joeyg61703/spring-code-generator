@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <VBox styleClass="section-container" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.josephgibis.springcodegenerator.ConfigController">
+fx:controller="com.josephgibis.springcodegenerator.controllers.ConfigController">
 
     <!-- TITLE -->
     <Text styleClass="h2" text="Source Folder"/>

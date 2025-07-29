@@ -6,12 +6,15 @@
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
          prefHeight="600" prefWidth="800" tabClosingPolicy="UNAVAILABLE"
          xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="com.josephgibis.springcodegenerator.ConfigController">
+         fx:controller="com.josephgibis.springcodegenerator.controllers.ConfigController">
     <Tab text="Project">
         <fx:include source="tabs/project-tab.fxml"/>
     </Tab>
     <Tab text="Entity">
         <fx:include source="tabs/entity-tab.fxml"/>
+    </Tab>
+    <Tab text="Canvas">
+        <fx:include source="tabs/canvas-tab.fxml"/>
     </Tab>
     <Tab text="Generate">
         <fx:include source="tabs/generate-tab.fxml"/>

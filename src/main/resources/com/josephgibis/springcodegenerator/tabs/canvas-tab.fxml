@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.josephgibis.springcodegenerator.controllers.CanvasController">
+
+    <!-- Toolbar -->
+    <left>
+        <VBox styleClass="section-container" spacing="10" prefWidth="200">
+            <Text styleClass="h2" text="Entity Creator"/>
+            <Text fx:id="selectedEntityHeader" styleClass="h3" text="Selected Entity: None"/>
+
+            <Button text="Add Entity" onAction="#addNewEntity" styleClass="primary-button"/>
+            <Button text="Add Relationship" onAction="#addRelationship" styleClass="primary-button"/>
+            <Separator/>
+
+            <Button text="Edit Entity" onAction="#editEntityDialog" styleClass="primary-button"/>
+            <Button text="Delete Entity" onAction="#deleteEntityAlert" styleClass="delete-button"/>
+            <Separator/>
+
+            <Button text="Generate Code" onAction="#generateDesignCode" styleClass="primary-button"/>
+        </VBox>
+    </left>
+
+    <!-- Canvas -->
+    <center>
+            <Pane fx:id="canvas" prefHeight="2000" prefWidth="2000" styleClass="canvas">
+                <!--   Entities generated here  -->
+            </Pane>
+    </center>
+
+</BorderPane>

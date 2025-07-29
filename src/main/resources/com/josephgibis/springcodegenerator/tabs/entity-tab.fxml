@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane styleClass="scroll-pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.josephgibis.springcodegenerator.ConfigController">
+<ScrollPane styleClass="scroll-pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.josephgibis.springcodegenerator.controllers.ConfigController">
     <VBox styleClass="main-container">
         <Text styleClass="h1" text="Entity Configuration"/>
 

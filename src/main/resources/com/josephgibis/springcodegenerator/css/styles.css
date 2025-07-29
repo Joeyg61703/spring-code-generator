@@ -12,7 +12,10 @@
 .h2 {
     -fx-font-size: 16px;
     -fx-font-family: "Segoe UI Semibold";
-
+}
+.h3 {
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI Semibold";
 }
 
 .description {
@@ -57,6 +60,43 @@
     -fx-background-color: #193db7;
 }
 
+.delete-button {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI Semibold";
+}
+
 
 .checkbox {
+}
+
+
+
+
+/*
+=============================================
+                DESIGNER TAB
+=============================================
+*/
+.canvas {
+    -fx-background-color: #d5d5d5
+}
+
+.entity-header {
+    -fx-background-color: darkblue;
+    -fx-border-color: darkblue;
+    -fx-font-weight: bold;
+    -fx-border-width: 1 1 0 1;
+}
+.entity-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+}
+.entity-properties{
+    -fx-background-color: white;
+    -fx-border-color: darkblue;
+    -fx-border-width: 0 1 1 1;
+    -fx-padding: 5;
 }

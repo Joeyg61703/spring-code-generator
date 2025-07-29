@@ -1,8 +1,12 @@
-package com.josephgibis.springcodegenerator;
+package com.josephgibis.springcodegenerator.controllers;
 
+import com.josephgibis.springcodegenerator.EntityProperty;
+import com.josephgibis.springcodegenerator.ProjectConfiguration;
+import com.josephgibis.springcodegenerator.model.enums.IdGenerationType;
+import com.josephgibis.springcodegenerator.model.enums.IdType;
+import com.josephgibis.springcodegenerator.model.enums.PropertyType;
 import com.josephgibis.springcodegenerator.util.Generator;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -123,12 +127,7 @@ public class ConfigController implements Initializable {
     private void setupIdTypeCombo() {
         if (idTypeCombo != null) {
             idTypeCombo.setItems(FXCollections.observableArrayList(
-                    "Long",
-                    "UUID",
-                    "Integer",
-                    "String",
-                    "BigInteger"
-
+                    IdType.getStringValues()
             ));
             idTypeCombo.getSelectionModel().select("Long");
         }
@@ -137,13 +136,7 @@ public class ConfigController implements Initializable {
     private void setupIdGenerationCombo() {
         if (idGenerationCombo != null) {
             idGenerationCombo.setItems(FXCollections.observableArrayList(
-                    "IDENTITY",
-                    "UUID",
-                    "SEQUENCE",
-                    "TABLE",
-                    "AUTO",
-                    "ASSIGNED",
-                    "NONE"
+                    IdGenerationType.getStringValues()
             ));
             idGenerationCombo.getSelectionModel().select("IDENTITY");
         }
@@ -159,9 +152,11 @@ public class ConfigController implements Initializable {
             propertyNameColumn.setOnEditCommit(e -> e.getRowValue().setName(e.getNewValue()));
 
             propertyTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
             propertyTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                    "String", "Integer", "Long", "Double", "Boolean", "LocalDate", "LocalDateTime", "BigDecimal"
+                     PropertyType.getStringValues()
             ));
+
             propertyTypeColumn.setOnEditCommit(e -> e.getRowValue().setType(e.getNewValue()));
 
             propertyNullableColumn.setCellValueFactory(new PropertyValueFactory<>("nullable"));
