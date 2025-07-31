@@ -1,10 +1,8 @@
-package com.josephgibis.springcodegenerator.model;
+package com.josephgibis.springcodegenerator.canvas;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.List;
 
 public class CanvasEntity {
     private final StringProperty name = new SimpleStringProperty("");

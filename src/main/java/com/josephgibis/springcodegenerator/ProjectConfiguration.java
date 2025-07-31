@@ -1,9 +1,6 @@
 package com.josephgibis.springcodegenerator;
 
-import com.josephgibis.springcodegenerator.EntityProperty;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class ProjectConfiguration {
     // Project Tab Fields
@@ -23,16 +20,6 @@ public class ProjectConfiguration {
     private final StringProperty repositoryPackage = new SimpleStringProperty("repositories");
     private final StringProperty servicePackage = new SimpleStringProperty("services");
     private final StringProperty controllerPackage = new SimpleStringProperty("controllers");
-
-    // Entity Tab Fields
-    private final StringProperty entityName = new SimpleStringProperty("");
-    private final StringProperty tableName = new SimpleStringProperty("");
-    private final StringProperty idType = new SimpleStringProperty("Long");
-    private final StringProperty idGeneration = new SimpleStringProperty("IDENTITY");
-    private final StringProperty extendsClass = new SimpleStringProperty("");
-
-    // Entity Properties
-    private final ObservableList<EntityProperty> properties = FXCollections.observableArrayList();
 
     // Generation Settings
     private final BooleanProperty overwriteFiles = new SimpleBooleanProperty(false);
@@ -101,28 +88,6 @@ public class ProjectConfiguration {
     public String getControllerPackage() { return controllerPackage.get(); }
     public void setControllerPackage(String controllerPackage) { this.controllerPackage.set(controllerPackage); }
 
-    public StringProperty entityNameProperty() { return entityName; }
-    public String getEntityName() { return entityName.get(); }
-    public void setEntityName(String entityName) { this.entityName.set(entityName); }
-
-    public StringProperty tableNameProperty() { return tableName; }
-    public String getTableName() { return tableName.get(); }
-    public void setTableName(String tableName) { this.tableName.set(tableName); }
-
-    public StringProperty idTypeProperty() { return idType; }
-    public String getIdType() { return idType.get(); }
-    public void setIdType(String idType) { this.idType.set(idType); }
-
-    public StringProperty idGenerationProperty() { return idGeneration; }
-    public String getIdGeneration() { return idGeneration.get(); }
-    public void setIdGeneration(String idGeneration) { this.idGeneration.set(idGeneration); }
-
-    public StringProperty extendsClassProperty() { return extendsClass; }
-    public String getExtendsClass() { return extendsClass.get(); }
-    public void setExtendsClass(String extendsClass) { this.extendsClass.set(extendsClass); }
-
-    public ObservableList<EntityProperty> getProperties() { return properties; }
-
     public BooleanProperty overwriteFilesProperty() { return overwriteFiles; }
     public boolean isOverwriteFiles() { return overwriteFiles.get(); }
     public void setOverwriteFiles(boolean overwriteFiles) { this.overwriteFiles.set(overwriteFiles); }
@@ -140,13 +105,12 @@ public class ProjectConfiguration {
     public void setGenerateTests(boolean generateTests) { this.generateTests.set(generateTests); }
 
     public boolean isValid() {
-        return !entityName.get().trim().isEmpty() &&
+        return
                 !basePackage.get().trim().isEmpty() &&
                 !sourceDirectory.get().trim().isEmpty();
     }
 
     public String getValidationError() {
-        if (entityName.get().trim().isEmpty()) return "Entity name is required";
         if (basePackage.get().trim().isEmpty()) return "Base package is required";
         if (sourceDirectory.get().trim().isEmpty()) return "Source directory is required";
         return null;

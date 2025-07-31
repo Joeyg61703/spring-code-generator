@@ -1,11 +1,10 @@
 package com.josephgibis.springcodegenerator.controllers;
 
-import com.josephgibis.springcodegenerator.model.CanvasEntity;
-import com.josephgibis.springcodegenerator.model.CanvasState;
-import com.josephgibis.springcodegenerator.model.EntityProperty;
+import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
+import com.josephgibis.springcodegenerator.canvas.CanvasState;
+import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

@@ -1,6 +1,5 @@
 package com.josephgibis.springcodegenerator.util;
 
-import com.josephgibis.springcodegenerator.EntityProperty;
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -15,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO: rewrite this
 public class Generator {
 
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
@@ -83,7 +83,7 @@ public class Generator {
     }
 
     public void generateEntityFile() {
-        String className = config.getEntityName();
+        String className = "";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -97,7 +97,7 @@ public class Generator {
     }
 
     public void generateDTOFile() {
-        String className = config.getEntityName() + "DTO";
+        String className = "" + "DTO";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -111,7 +111,7 @@ public class Generator {
     }
 
     public void generateServiceFile() {
-        String className = config.getEntityName() + "Service";
+        String className = "" + "Service";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -125,7 +125,7 @@ public class Generator {
     }
 
     public void generateServiceImplFile() {
-        String className = config.getEntityName() + "ServiceImpl";
+        String className = "" + "ServiceImpl";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -139,7 +139,7 @@ public class Generator {
     }
 
     public void generateControllerFile() {
-        String className = config.getEntityName() + "Controller";
+        String className = "" + "Controller";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -153,7 +153,7 @@ public class Generator {
     }
 
     public void generateRepositoryFile() {
-        String className = config.getEntityName() + "Repository";
+        String className = "" + "Repository";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
@@ -184,11 +184,11 @@ public class Generator {
         model.put("dtoPackage", config.getDtoPackage());
 
         // assuming entityName is in pascalCase we can make other casings
-        String entityName = config.getEntityName();
+        String entityName = "";
         String pluralEntityName =  StringFormatter.makePlural(entityName);
 
         // Entity Info
-        model.put("entityName", config.getEntityName());
+        model.put("entityName", "");
         model.put("pluralEntityName", pluralEntityName);
 
         model.put("entityNameCamel", StringFormatter.makeCamelCase(entityName));
@@ -199,28 +199,28 @@ public class Generator {
         model.put("pluralEntityNameSnake", StringFormatter.makeSnakeCase(pluralEntityName)); // (my preferred table name)
         model.put("pluralEntityNamePascal", StringFormatter.makePascalCase(pluralEntityName));
 
-        model.put("extendsClass", config.getExtendsClass());
-
-        String tableName = config.getTableName();
+//        model.put("extendsClass", config.getExtendsClass());
+//
+        String tableName = "";
         if (tableName == null || tableName.trim().isEmpty()) {
-            tableName = StringFormatter.makeSnakeCase(config.getEntityName());
+            tableName = StringFormatter.makeSnakeCase("");
         }
         model.put("tableName", tableName);
 
-        model.put("idType", config.getIdType());
-        model.put("idGeneration", config.getIdGeneration());
+//        model.put("idType", config.getIdType());
+//        model.put("idGeneration", config.getIdGeneration());
 
         // Entity Properties
         List<Map<String, Object>> templateProperties = new ArrayList<>();
-        for (EntityProperty prop : config.getProperties()) {
-            Map<String, Object> propMap = new HashMap<>();
-            propMap.put("name", prop.getName());
-            propMap.put("type", prop.getType());
-            propMap.put("nullable", prop.isNullable());
-            propMap.put("unique", prop.isUnique());
-            propMap.put("defaultValue", prop.getDefaultValue() != null ? prop.getDefaultValue() : "");
-            templateProperties.add(propMap);
-        }
+//        for (EntityProperty prop : config.getProperties()) {
+//            Map<String, Object> propMap = new HashMap<>();
+//            propMap.put("name", prop.getName());
+//            propMap.put("type", prop.getType());
+//            propMap.put("nullable", prop.isNullable());
+//            propMap.put("unique", prop.isUnique());
+//            propMap.put("defaultValue", prop.getDefaultValue() != null ? prop.getDefaultValue() : "");
+//            templateProperties.add(propMap);
+//        }
         model.put("properties", templateProperties);
 
         // Generation Settings

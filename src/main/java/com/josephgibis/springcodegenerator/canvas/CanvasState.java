@@ -1,4 +1,4 @@
-package com.josephgibis.springcodegenerator.model;
+package com.josephgibis.springcodegenerator.canvas;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

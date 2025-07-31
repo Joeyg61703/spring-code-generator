@@ -1,4 +1,4 @@
-package com.josephgibis.springcodegenerator.model.enums;
+package com.josephgibis.springcodegenerator.canvas.enums;
 
 import java.util.Arrays;
 

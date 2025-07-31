@@ -1,6 +1,6 @@
-package com.josephgibis.springcodegenerator.model;
+package com.josephgibis.springcodegenerator.canvas;
 
-import com.josephgibis.springcodegenerator.model.enums.RelationshipType;
+import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 
 public class EntityRelationship {
 

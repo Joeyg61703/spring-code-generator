@@ -10,9 +10,7 @@
     <Tab text="Project">
         <fx:include source="tabs/project-tab.fxml"/>
     </Tab>
-    <Tab text="Entity">
-        <fx:include source="tabs/entity-tab.fxml"/>
-    </Tab>
+
     <Tab text="Canvas">
         <fx:include source="tabs/canvas-tab.fxml"/>
     </Tab>

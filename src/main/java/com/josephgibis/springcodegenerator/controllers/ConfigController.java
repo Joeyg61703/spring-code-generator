@@ -1,20 +1,12 @@
 package com.josephgibis.springcodegenerator.controllers;
 
-import com.josephgibis.springcodegenerator.EntityProperty;
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
-import com.josephgibis.springcodegenerator.model.enums.IdGenerationType;
-import com.josephgibis.springcodegenerator.model.enums.IdType;
-import com.josephgibis.springcodegenerator.model.enums.PropertyType;
 import com.josephgibis.springcodegenerator.util.Generator;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
+
 import javafx.stage.DirectoryChooser;
 
 import java.io.File;
@@ -49,21 +41,6 @@ public class ConfigController implements Initializable {
     @FXML private CheckBox addValidationCheckBox;
     @FXML private CheckBox generateTestsCheckBox;
 
-    // Entity Details
-    @FXML private TextField entityNameField;
-    @FXML private TextField tableNameField;
-    @FXML private ComboBox<String> idTypeCombo;
-    @FXML private ComboBox<String> idGenerationCombo;
-    @FXML private TextField extendsField;
-
-    // Entity Properties
-    @FXML private TableView<EntityProperty> propertiesTable;
-    @FXML private TableColumn<EntityProperty, String> propertyNameColumn;
-    @FXML private TableColumn<EntityProperty, String> propertyTypeColumn;
-    @FXML private TableColumn<EntityProperty, Boolean> propertyNullableColumn;
-    @FXML private TableColumn<EntityProperty, Boolean> propertyUniqueColumn;
-    @FXML private TableColumn<EntityProperty, String> propertyDefaultColumn;
-    @FXML private TableColumn<EntityProperty, Void> actionsColumn;
 
     @FXML
     private void browseSourceDirectory() {
@@ -112,85 +89,10 @@ public class ConfigController implements Initializable {
         showAlert("Success", "Files generated successfully!");
     }
 
-    public void addProperty(ActionEvent event) {
-        config.getProperties().add(new EntityProperty());
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupBindings();
-        setupPropertiesTable();
-        setupIdGenerationCombo();
-        setupIdTypeCombo();
     }
-
-    private void setupIdTypeCombo() {
-        if (idTypeCombo != null) {
-            idTypeCombo.setItems(FXCollections.observableArrayList(
-                    IdType.getStringValues()
-            ));
-            idTypeCombo.getSelectionModel().select("Long");
-        }
-    }
-
-    private void setupIdGenerationCombo() {
-        if (idGenerationCombo != null) {
-            idGenerationCombo.setItems(FXCollections.observableArrayList(
-                    IdGenerationType.getStringValues()
-            ));
-            idGenerationCombo.getSelectionModel().select("IDENTITY");
-        }
-    }
-
-    private void setupPropertiesTable() {
-        if(propertiesTable != null) {
-            propertiesTable.setItems(config.getProperties());
-            propertiesTable.setEditable(true);
-
-            propertyNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-            propertyNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            propertyNameColumn.setOnEditCommit(e -> e.getRowValue().setName(e.getNewValue()));
-
-            propertyTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-
-            propertyTypeColumn.setCellFactory(ComboBoxTableCell.forTableColumn(
-                     PropertyType.getStringValues()
-            ));
-
-            propertyTypeColumn.setOnEditCommit(e -> e.getRowValue().setType(e.getNewValue()));
-
-            propertyNullableColumn.setCellValueFactory(new PropertyValueFactory<>("nullable"));
-            propertyNullableColumn.setCellFactory(CheckBoxTableCell.forTableColumn(propertyNullableColumn));
-
-            propertyUniqueColumn.setCellValueFactory(new PropertyValueFactory<>("unique"));
-            propertyUniqueColumn.setCellFactory(CheckBoxTableCell.forTableColumn(propertyUniqueColumn));
-
-            propertyDefaultColumn.setCellValueFactory(new PropertyValueFactory<>("defaultValue"));
-            propertyDefaultColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            propertyDefaultColumn.setOnEditCommit(e -> e.getRowValue().setDefaultValue(e.getNewValue()));
-
-            actionsColumn.setCellFactory(param -> new TableCell<EntityProperty, Void>() {
-                private final Button deleteButton = new Button("Delete");
-
-                {
-                    deleteButton.setOnAction(e -> {
-                        EntityProperty property = getTableView().getItems().get(getIndex());
-                        config.getProperties().remove(property);
-                    });
-                    deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 16px;");
-                }
-
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(deleteButton);
-                    }
-                }
-            });
-        }}
 
     private void setupBindings() {
         // Project Tab Bindings
@@ -229,23 +131,6 @@ public class ConfigController implements Initializable {
         }
         if (controllerPackageField != null) {
             controllerPackageField.textProperty().bindBidirectional(config.controllerPackageProperty());
-        }
-
-        // Entity Tab Bindings
-        if (entityNameField != null) {
-            entityNameField.textProperty().bindBidirectional(config.entityNameProperty());
-        }
-        if (tableNameField != null) {
-            tableNameField.textProperty().bindBidirectional(config.tableNameProperty());
-        }
-        if (idTypeCombo != null) {
-            idTypeCombo.valueProperty().bindBidirectional(config.idTypeProperty());
-        }
-        if (idGenerationCombo != null) {
-            idGenerationCombo.valueProperty().bindBidirectional(config.idGenerationProperty());
-        }
-        if (extendsField != null) {
-            extendsField.textProperty().bindBidirectional(config.extendsClassProperty());
         }
 
         // Generate Tab Bindings

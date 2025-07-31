@@ -1,8 +1,8 @@
 package com.josephgibis.springcodegenerator.controllers;
 
-import com.josephgibis.springcodegenerator.model.*;
-import com.josephgibis.springcodegenerator.model.EntityProperty;
-import com.josephgibis.springcodegenerator.model.enums.RelationshipType;
+import com.josephgibis.springcodegenerator.canvas.*;
+import com.josephgibis.springcodegenerator.canvas.EntityProperty;
+import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
