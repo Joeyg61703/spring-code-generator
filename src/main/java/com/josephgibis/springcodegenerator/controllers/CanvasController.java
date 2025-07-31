@@ -2,10 +2,8 @@ package com.josephgibis.springcodegenerator.controllers;
 
 import com.josephgibis.springcodegenerator.model.*;
 import com.josephgibis.springcodegenerator.model.EntityProperty;
-import com.josephgibis.springcodegenerator.model.enums.PropertyType;
 import com.josephgibis.springcodegenerator.model.enums.RelationshipType;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,10 +21,7 @@ public class CanvasController implements Initializable {
     @FXML public Text selectedEntityHeader;
     @FXML private Pane canvas;
 
-    private final HashMap<String, CanvasEntity> entities = new HashMap<>();
-    private final ObservableList<EntityRelationship> relationships = FXCollections.observableArrayList();
-
-    private CanvasEntity selectedEntity;
+    private String componentsDir = "/com/josephgibis/springcodegenerator/components/";
 
     //TODO: prevent duplicate names
 
@@ -49,7 +44,7 @@ public class CanvasController implements Initializable {
         }
 
         CanvasEntity newCanvasEntity = new CanvasEntity(entityName);
-        entities.put(entityName, newCanvasEntity);
+        CanvasState.addEntity(newCanvasEntity);
 
         EntityVBox entityVBox = new EntityVBox(newCanvasEntity, canvas);
         entityVBox.setOnMouseClicked(event -> selectEntity(newCanvasEntity));
@@ -61,6 +56,7 @@ public class CanvasController implements Initializable {
 
     @FXML
     private void addRelationship() {
+        HashMap<String, CanvasEntity> entities = CanvasState.getEntityMap();
         if (entities.size() < 2) {
             showAlert("Need Entities", "You need at least 2 entities to create a relationship.");
             return;
@@ -82,7 +78,7 @@ public class CanvasController implements Initializable {
         CanvasEntity targetEntity = entities.get(targetEntityName);
 
         EntityRelationship relationship = new EntityRelationship(sourceEntity, targetEntity, relationType);
-        relationships.add(relationship);
+        CanvasState.addRelationship(relationship);
 
         if (    relationType == RelationshipType.MANY_TO_ONE ||
                 relationType == RelationshipType.ONE_TO_ONE  ||
@@ -106,6 +102,7 @@ public class CanvasController implements Initializable {
 
     @FXML
     private void generateDesignCode() {
+        HashMap<String, CanvasEntity> entities = CanvasState.getEntityMap();
         if (entities.isEmpty()) {
             showAlert("No Entities", "No Entities to generate.");
             return;
@@ -115,7 +112,7 @@ public class CanvasController implements Initializable {
     }
 
     private void selectEntity(CanvasEntity entity) {
-        selectedEntity = entity;
+        CanvasState.setSelectedEntity(entity);
         selectedEntityHeader.setText("Selected Entity: " + (entity != null ? entity.getName() : "None"));
         // this doesn't account for someone naming their entity 'None' but come on
     }
@@ -129,6 +126,8 @@ public class CanvasController implements Initializable {
     }
 
     private void redrawCanvas() {
+        HashMap<String, CanvasEntity> entities = CanvasState.getEntityMap();
+
         canvas.getChildren().clear();
 
         selectEntity(null);
@@ -156,6 +155,7 @@ public class CanvasController implements Initializable {
     }
 
     private Optional<String> getRelationshipSourceEntityFromDialog(){
+        HashMap<String, CanvasEntity> entities = CanvasState.getEntityMap();
         List<String> entityChoices = new ArrayList<>(entities.keySet());
         ChoiceDialog<String> relationshipSourceDialog = new ChoiceDialog<>(entityChoices.getFirst(), entityChoices);
         relationshipSourceDialog.setTitle("Select Source Entity");
@@ -165,6 +165,8 @@ public class CanvasController implements Initializable {
     }
 
     private Optional<String> getRelationshipTargetEntityFromDialog(String sourceEntityName){
+        HashMap<String, CanvasEntity> entities = CanvasState.getEntityMap();
+
         List<String> targetEntityChoices = new ArrayList<>(entities.keySet());
         targetEntityChoices.remove(sourceEntityName);
 
@@ -186,51 +188,40 @@ public class CanvasController implements Initializable {
         return relationshipTypeDialog.showAndWait();
     }
 
-    private Optional<String> getPropertyTypeFromDialog(){
-        String[] propertyTypes = PropertyType.getStringValues();
-        ChoiceDialog<String> typeDialog = new ChoiceDialog<>(propertyTypes[0], propertyTypes);
-        typeDialog.setTitle("Select Field Type");
-        typeDialog.setHeaderText("Choose field type:");
-
-        return typeDialog.showAndWait();
-    }
-
-    private Optional<String> getPropertyNameFromDialog(){
-        TextInputDialog propertyDialog = new TextInputDialog("propertyName");
-        propertyDialog.setTitle("Add Property");
-        propertyDialog.setHeaderText("Enter property name:");
-        return propertyDialog.showAndWait();
-    }
-
     @FXML
     private void editEntityDialog() throws IOException {
-        if (selectedEntity == null) {
+        if (CanvasState.getSelectedEntity() == null) {
             showAlert("No Entity Selected", "Please select an entity first.");
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/josephgibis/springcodegenerator/components/dialogs/edit-entity-dialog.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(componentsDir + "dialogs/edit-entity-dialog.fxml"));
         DialogPane dialogPane = loader.load();
         EntityController entityController = loader.getController();
 
-        CanvasEntity originalEntity = selectedEntity;
-        CanvasEntity entityCopy = new CanvasEntity(originalEntity);
-
-        entityController.loadEntity(entityCopy);
+        CanvasEntity selectedEntity = CanvasState.getSelectedEntity();
+        entityController.loadEntity(selectedEntity);
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(dialogPane);
-        dialog.setTitle("Edit Entity: " + selectedEntity.getName());
+        dialog.setTitle("Edit Entity: " + CanvasState.getSelectedEntity().getName());
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+        Optional<ButtonType> selectedButton =  dialog.showAndWait();
 
-        dialog.showAndWait();
+        if(selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)){
 
+            entityController.updateEntity();
+            updateEntityDisplay(selectedEntity);
+
+            selectedEntityHeader.setText("Selected Entity: " + selectedEntity.getName());
+            showAlert("Entity Updated", "Successfully updated '" + selectedEntity.getName() + "'");
+        }
     }
 
     @FXML
     private void deleteEntityAlert(){
-        if (selectedEntity == null) {
+        if (CanvasState.getSelectedEntity() == null) {
             showAlert("No Entity Selected", "Please select an entity first.");
             return;
         }
@@ -239,30 +230,28 @@ public class CanvasController implements Initializable {
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION,
-                "Are you sure you want to delete the entity '" + selectedEntity.getName() + "'?",
+                "Are you sure you want to delete the entity '" + CanvasState.getSelectedEntity().getName() + "'?",
                 confirmButton, cancelButton);
         confirmationDialog.setTitle("Confirm Deletion");
         confirmationDialog.setHeaderText("This action cannot be undone.");
 
-        Optional<ButtonType> response = confirmationDialog.showAndWait();
-        if(response.isEmpty()) return;
+        Optional<ButtonType> selectedButton = confirmationDialog.showAndWait();
+        if(selectedButton.isEmpty()) return;
 
-        if(response.get().equals(confirmButton)){
+        if(selectedButton.get().equals(confirmButton)){
             deleteEntity();
         }
     }
 
     @FXML
     private void deleteEntity(){
-        if (selectedEntity == null) {
+        if (CanvasState.getSelectedEntity() == null) {
             showAlert("No Entity Selected", "Please select an entity first.");
             return;
         }
 
-        entities.remove(selectedEntity.getName());
-        //TODO: remove relation
+        CanvasState.removeEntityByName(CanvasState.getSelectedEntity().getName());
         redrawCanvas();
-
     }
 
     private void showAlert(String title, String message) {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+
+<DialogPane
+        xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.josephgibis.springcodegenerator.controllers.PropertyController"
+>
+    <content>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10"/>
+            </padding>
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0"/>
+                </columnConstraints>
+
+                <Label text="Property Name:" GridPane.rowIndex="0"/>
+                <TextField fx:id="propertyNameField" promptText="propertyName" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Property Type:" GridPane.rowIndex="1"/>
+                <ComboBox fx:id="propertyTypeCombo" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Default Value:" GridPane.rowIndex="2"/>
+                <TextField fx:id="defaultValueField" promptText="Optional default value" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <VBox spacing="8">
+                <CheckBox fx:id="nullableCheckBox" text="Nullable" selected="true"/>
+                <CheckBox fx:id="uniqueCheckBox" text="Unique"/>
+            </VBox>
+        </VBox>
+    </content>
+</DialogPane>

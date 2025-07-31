@@ -16,6 +16,10 @@ public class EntityRelationship {
         this.foreignKeyProperty = targetEntity.getName().toLowerCase() + "_id";
     }
 
+    public boolean containsEntity(CanvasEntity entity){
+        return sourceEntity.equals(entity) || targetEntity.equals(entity);
+    }
+
     // Getters and setters
     public CanvasEntity getSourceEntity() { return sourceEntity; }
     public void setSourceEntity(CanvasEntity fromEntity) { this.sourceEntity = sourceEntity; }

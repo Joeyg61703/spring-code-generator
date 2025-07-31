@@ -41,7 +41,7 @@
                     <TableColumn fx:id="deleteColumn" prefWidth="75.0" text="Delete"/>
                 </columns>
             </TableView>
-            <Button text="Add New Property" onAction="#addProperty" maxWidth="Infinity"/>
+            <Button text="Add New Property" onAction="#showAddPropertyDialog" maxWidth="Infinity"/>
         </VBox>
     </content>
 
