@@ -22,10 +22,10 @@ public class EntityRelationship {
 
     // Getters and setters
     public CanvasEntity getSourceEntity() { return sourceEntity; }
-    public void setSourceEntity(CanvasEntity fromEntity) { this.sourceEntity = sourceEntity; }
+    public void setSourceEntity(CanvasEntity sourceEntity) { this.sourceEntity = sourceEntity; }
 
     public CanvasEntity getTargetEntity() { return targetEntity; }
-    public void setTargetEntity(CanvasEntity toEntity) { this.targetEntity = targetEntity; }
+    public void setTargetEntity(CanvasEntity targetEntity) { this.targetEntity = targetEntity; }
 
     public RelationshipType getRelationshipType() { return relationshipType; }
     public void setRelationshipType(RelationshipType relationshipType) { this.relationshipType = relationshipType; }

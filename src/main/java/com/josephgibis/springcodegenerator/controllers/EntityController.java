@@ -1,7 +1,7 @@
 package com.josephgibis.springcodegenerator.controllers;
 
 import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
-import com.josephgibis.springcodegenerator.canvas.CanvasState;
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,9 +124,9 @@ public class EntityController implements Initializable {
 
     public void updateEntity(){
 
-        System.out.println("Updating entity: " + CanvasState.getSelectedEntity().getName());
+        System.out.println("Updating entity: " + CanvasManager.getSelectedEntity().getName());
 
-        CanvasEntity selectedEntity = CanvasState.getSelectedEntity();
+        CanvasEntity selectedEntity = CanvasManager.getSelectedEntity();
         String originalName = selectedEntity.getName();
 
         selectedEntity.setName(entityNameField.getText());
@@ -143,7 +143,7 @@ public class EntityController implements Initializable {
             selectedEntity.getProperties().add(propertyCopy);
         }
 
-        CanvasState.updateEntityByName(originalName, selectedEntity);
+        CanvasManager.updateEntityByName(originalName, selectedEntity);
     }
 
 

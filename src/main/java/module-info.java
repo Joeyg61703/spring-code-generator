@@ -13,4 +13,6 @@ module com.josephgibis.springcodegenerator {
     opens com.josephgibis.springcodegenerator.canvas.enums to javafx.fxml;
     exports com.josephgibis.springcodegenerator.controllers;
     opens com.josephgibis.springcodegenerator.controllers to javafx.fxml;
+    exports com.josephgibis.springcodegenerator.canvas.visuals;
+    opens com.josephgibis.springcodegenerator.canvas.visuals to javafx.fxml;
 }

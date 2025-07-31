@@ -1,5 +1,7 @@
-package com.josephgibis.springcodegenerator.canvas;
+package com.josephgibis.springcodegenerator.canvas.visuals;
 
+import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
+import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -97,4 +99,5 @@ public class EntityVBox extends VBox {
     }
 
     public CanvasEntity getEntity() { return entity; }
+    public void setEntity(CanvasEntity entity) {this.entity = entity;}
 }
