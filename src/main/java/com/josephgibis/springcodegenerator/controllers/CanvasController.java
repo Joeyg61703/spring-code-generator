@@ -1,5 +1,6 @@
 package com.josephgibis.springcodegenerator.controllers;
 
+import com.josephgibis.springcodegenerator.SaveSystem;
 import com.josephgibis.springcodegenerator.canvas.*;
 import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 
@@ -10,7 +11,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -22,6 +25,8 @@ public class CanvasController implements Initializable {
     @FXML private Pane canvas;
 
     private String componentsDir = "/com/josephgibis/springcodegenerator/components/";
+    private final SaveSystem saveSystem = new SaveSystem();
+
 
     //TODO: prevent duplicate names
 
@@ -242,6 +247,65 @@ public class CanvasController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // ========================================
+    //                 SAVE/LOAD
+    // ========================================
+
+    @FXML
+    private void saveProject() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Canvas Project");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
+        fileChooser.setInitialFileName("canvas-project.json");
+
+        File file = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        if (file != null) {
+            try {
+                saveSystem.saveCanvasToFile(file);
+                showAlert("Success", "Project saved successfully to " + file.getName());
+            } catch (IOException e) {
+                showAlert("Error", "Failed to save project: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void loadProject() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Canvas Project");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
+
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
+        if (file != null) {
+            try {
+                saveSystem.loadFileToCanvas(file);
+                showAlert("Success", "Project loaded successfully from " + file.getName());
+            } catch (IOException e) {
+                showAlert("Error", "Failed to load project: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void clearProject() {
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Clear Project");
+        confirmDialog.setHeaderText("Clear Canvas");
+        confirmDialog.setContentText("Are you sure you want to clear your project? This will delete everything");
+
+        Optional<ButtonType> selectedButton = confirmDialog.showAndWait();
+        if (selectedButton.isPresent() && selectedButton.get() == ButtonType.OK) {
+            CanvasManager.clearCanvas();
+            showAlert("Success", "Canvas Cleared");
+        }
     }
 
 }

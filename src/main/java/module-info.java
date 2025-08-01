@@ -3,8 +3,8 @@ module com.josephgibis.springcodegenerator {
     requires javafx.fxml;
     requires java.desktop;
     requires freemarker;
-
-
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
     opens com.josephgibis.springcodegenerator to javafx.fxml;
     exports com.josephgibis.springcodegenerator;
     exports com.josephgibis.springcodegenerator.canvas;

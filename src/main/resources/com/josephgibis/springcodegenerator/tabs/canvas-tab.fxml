@@ -20,8 +20,15 @@
             <Button text="Edit Entity" onAction="#editEntityDialog" styleClass="primary-button"/>
             <Button text="Edit Relationship" onAction="#editRelationshipDialog" styleClass="primary-button"/>
             <Separator/>
+
             <Button text="Delete Entity" onAction="#deleteEntityAlert" styleClass="delete-button"/>
             <Button text="Delete Relationship" onAction="#deleteRelationshipAlert" styleClass="delete-button"/>
+            <Separator/>
+
+            <Button text="Load File" onAction="#loadProject" styleClass="primary-button"/>
+            <Button text="Save File" onAction="#saveProject" styleClass="save-button"/>
+            <Button text="Clear Canvas" onAction="#clearProject" styleClass="delete-button"/>
+
 
         </VBox>
     </left>

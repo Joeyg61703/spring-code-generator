@@ -1,8 +1,13 @@
 package com.josephgibis.springcodegenerator.canvas;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CanvasEntity {
     private final StringProperty name = new SimpleStringProperty("");
@@ -11,6 +16,8 @@ public class CanvasEntity {
     private final StringProperty idType = new SimpleStringProperty("Long");
 
     private double x, y;
+
+    public CanvasEntity() {}
 
     public CanvasEntity(String name) {
         setName(name);
@@ -31,35 +38,60 @@ public class CanvasEntity {
         setY(entity.getY());
     }
 
-    // Getters and setters
-    public StringProperty nameProperty() { return name; }
+    @JsonProperty("name")
     public String getName() { return name.get(); }
+
+    @JsonProperty("name")
     public void setName(String name) { this.name.set(name); }
 
-    public StringProperty tableNameProperty() { return tableName; }
+    @JsonProperty("tableName")
     public String getTableName() { return tableName.get(); }
+
+    @JsonProperty("tableName")
     public void setTableName(String tableName) { this.tableName.set(tableName); }
 
-    public ObservableList<EntityProperty> getProperties() { return properties; }
-    public void addProperty(EntityProperty property) { properties.add(property); }
-
-    public StringProperty idTypeProperty() { return idType; }
+    @JsonProperty("idType")
     public String getIdType() { return idType.get(); }
+
+    @JsonProperty("idType")
     public void setIdType(String idType) { this.idType.set(idType); }
 
-    public double getY() {
-        return y;
+    @JsonProperty("x")
+    public double getX() { return x; }
+
+    @JsonProperty("x")
+    public void setX(double x) { this.x = x; }
+
+    @JsonProperty("y")
+    public double getY() { return y; }
+
+    @JsonProperty("y")
+    public void setY(double y) { this.y = y; }
+
+    @JsonProperty("properties")
+    public List<EntityProperty> getPropertiesList() {
+        return new ArrayList<>(properties);
     }
 
-    public void setY(double y) {
-        this.y = y;
+    @JsonProperty("properties")
+    public void setPropertiesList(List<EntityProperty> propertiesList) {
+        properties.clear();
+        if (propertiesList != null) {
+            properties.addAll(propertiesList);
+        }
     }
 
-    public double getX() {
-        return x;
-    }
+    @JsonIgnore
+    public StringProperty nameProperty() { return name; }
 
-    public void setX(double x) {
-        this.x = x;
-    }
+    @JsonIgnore
+    public StringProperty tableNameProperty() { return tableName; }
+
+    @JsonIgnore
+    public StringProperty idTypeProperty() { return idType; }
+
+    @JsonIgnore
+    public ObservableList<EntityProperty> getProperties() { return properties; }
+
+    public void addProperty(EntityProperty property) { properties.add(property); }
 }

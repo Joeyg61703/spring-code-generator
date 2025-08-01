@@ -1,5 +1,6 @@
 package com.josephgibis.springcodegenerator.canvas;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 
 public class EntityRelationship {
@@ -8,6 +9,8 @@ public class EntityRelationship {
     private CanvasEntity targetEntity;
     private RelationshipType relationshipType;
     private String foreignKeyProperty;
+
+    public EntityRelationship() {}
 
     public EntityRelationship(CanvasEntity sourceEntity, CanvasEntity targetEntity, RelationshipType type) {
         this.sourceEntity = sourceEntity;
@@ -24,16 +27,27 @@ public class EntityRelationship {
         return sourceEntity.getName() + "->" + targetEntity.getName();
     }
 
-    // Getters and setters
+    @JsonProperty("sourceEntity")
     public CanvasEntity getSourceEntity() { return sourceEntity; }
+
+    @JsonProperty("sourceEntity")
     public void setSourceEntity(CanvasEntity sourceEntity) { this.sourceEntity = sourceEntity; }
 
+    @JsonProperty("targetEntity")
     public CanvasEntity getTargetEntity() { return targetEntity; }
+
+    @JsonProperty("targetEntity")
     public void setTargetEntity(CanvasEntity targetEntity) { this.targetEntity = targetEntity; }
 
+    @JsonProperty("relationshipType")
     public RelationshipType getRelationshipType() { return relationshipType; }
+
+    @JsonProperty("relationshipType")
     public void setRelationshipType(RelationshipType relationshipType) { this.relationshipType = relationshipType; }
 
+    @JsonProperty("foreignKeyProperty")
     public String getForeignKeyProperty() { return foreignKeyProperty; }
-    public void setForeignKeyProperty(String foreignKeyField) { this.foreignKeyProperty = foreignKeyField; }
+
+    @JsonProperty("foreignKeyProperty")
+    public void setForeignKeyProperty(String foreignKeyProperty) { this.foreignKeyProperty = foreignKeyProperty; }
 }

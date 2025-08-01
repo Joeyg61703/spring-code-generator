@@ -210,4 +210,13 @@ public class CanvasManager {
     }
 
 
+    public static void clearCanvas() {
+        setSelectedEntity(null);
+        setSelectedRelationship(null);
+
+        canvas.getChildren().clear();
+        entityVBoxMap.clear();
+        relationships.clear();
+        relationshipLines.clear();
+    }
 }

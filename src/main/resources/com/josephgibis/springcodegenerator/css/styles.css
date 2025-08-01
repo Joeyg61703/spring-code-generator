@@ -56,6 +56,13 @@
 
 }
 
+.save-button {
+ -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI Semibold";}
+}
+
 .primary-button:hover {
     -fx-background-color: #193db7;
 }
