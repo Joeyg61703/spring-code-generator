@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ScrollPane?>
+
+<DialogPane
+        xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.josephgibis.springcodegenerator.controllers.RelationshipController"
+>
+    <content>
+        <VBox spacing="15" prefWidth="600" prefHeight="400">
+            <padding>
+                <Insets top="10" left="10" right="10" bottom="10"/>
+            </padding>
+
+            <Label text="Entity Relationships" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <TableView fx:id="relationshipsTable" editable="false">
+                    <columns>
+                        <TableColumn fx:id="sourceColumn" prefWidth="120.0" text="Source Entity"/>
+                        <TableColumn fx:id="targetColumn" prefWidth="120.0" text="Target Entity"/>
+                        <TableColumn fx:id="typeColumn" prefWidth="140.0" text="Relationship Type"/>
+                        <TableColumn fx:id="editColumn" prefWidth="75.0" text="Edit"/>
+                        <TableColumn fx:id="deleteColumn" prefWidth="75.0" text="Delete"/>
+                    </columns>
+                </TableView>
+            </ScrollPane>
+        </VBox>
+    </content>
+</DialogPane>

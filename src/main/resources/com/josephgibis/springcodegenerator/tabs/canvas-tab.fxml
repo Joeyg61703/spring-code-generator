@@ -17,6 +17,8 @@
             <Separator/>
 
             <Button text="Edit Entity" onAction="#editEntityDialog" styleClass="primary-button"/>
+            <Button text="Edit Relationship" onAction="#editRelationshipDialog" styleClass="primary-button"/>
+            <Separator/>
             <Button text="Delete Entity" onAction="#deleteEntityAlert" styleClass="delete-button"/>
         </VBox>
     </left>

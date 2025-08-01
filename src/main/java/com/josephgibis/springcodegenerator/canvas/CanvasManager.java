@@ -124,14 +124,6 @@ public class CanvasManager {
         canvas.getChildren().add(0, relationshipLine);
     }
 
-    public static void removeRelationshipLine(RelationshipLine relationshipLine) {
-        relationshipLines.remove(relationshipLine);
-    }
-
-    public static ObservableList<RelationshipLine> getRelationshipLines() {
-        return relationshipLines;
-    }
-
     public static void createRelationshipByNames(String sourceEntityName, String targetEntityName, RelationshipType relationshipType){
         EntityVBox sourceEntityVbox = getEntityVboxByName(sourceEntityName);
         EntityVBox targetEntityVbox = getEntityVboxByName(targetEntityName);
@@ -146,4 +138,36 @@ public class CanvasManager {
 
     }
 
+    public static void removeRelationship(EntityRelationship relationship) {
+        relationships.remove(relationship);
+        List<RelationshipLine> linesToRemove = new ArrayList<>(relationshipLines
+                .stream()
+                .filter(line -> line.getRelationship().equals(relationship))
+                .toList());
+
+        relationshipLines.removeAll(linesToRemove);
+        canvas.getChildren().removeAll(linesToRemove);
+    }
+
+    public static void updateRelationships(List<EntityRelationship> updatedRelationships) {
+        clearRelationshipLines();
+        relationships.clear();
+        relationships.addAll(updatedRelationships);
+        redrawRelationshipLines();
+    }
+
+    public static void clearRelationshipLines(){
+        canvas.getChildren().removeIf(child -> child instanceof RelationshipLine);
+        relationshipLines.clear();
+    }
+
+    public static void redrawRelationshipLines(){
+        for (EntityRelationship relationship : relationships) {
+            EntityVBox sourceVBox = getEntityVboxByName(relationship.getSourceEntity().getName());
+            EntityVBox targetVBox = getEntityVboxByName(relationship.getTargetEntity().getName());
+
+            RelationshipLine line = new RelationshipLine(relationship, sourceVBox, targetVBox);
+            addRelationshipLine(line);
+        }
+    }
 }

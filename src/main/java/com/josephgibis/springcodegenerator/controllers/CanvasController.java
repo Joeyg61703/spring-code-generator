@@ -182,6 +182,26 @@ public class CanvasController implements Initializable {
         }
     }
 
+    @FXML
+    private void editRelationshipDialog() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(componentsDir + "dialogs/edit-relationship-dialog.fxml"));
+        DialogPane dialogPane = loader.load();
+        RelationshipController relationshipController = loader.getController();
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+        dialog.setTitle("Manage Relationships");
+        dialogPane.getButtonTypes().add(ButtonType.CLOSE);
+        dialogPane.getButtonTypes().add(ButtonType.OK);
+
+        Optional<ButtonType> selectedButton = dialog.showAndWait();
+
+        if(selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)) {
+            List<EntityRelationship> updatedRelationships = relationshipController.getUpdatedRelationships();
+            CanvasManager.updateRelationships(updatedRelationships);
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -189,6 +209,5 @@ public class CanvasController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 
 }
