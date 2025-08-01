@@ -8,10 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CanvasManager {
     private static final Map<String, EntityVBox> entityVBoxMap = new HashMap<>();
@@ -19,8 +16,13 @@ public class CanvasManager {
     private static final ObservableList<EntityRelationship> relationships = FXCollections.observableArrayList();
     private static final ObservableList<RelationshipLine> relationshipLines = FXCollections.observableArrayList();
     private static CanvasEntity selectedEntity;
+    private static EntityRelationship selectedRelationship;
+
     private static Pane canvas;
+
     private static Text selectedEntityHeader;
+    private static Text selectedRelationshipHeader;
+
 
     public static void setCanvas(Pane canvasPane) {
         canvas = canvasPane;
@@ -28,9 +30,8 @@ public class CanvasManager {
     public static void setSelectedEntityHeader(Text header){
         selectedEntityHeader = header;
     }
-
-    private static void addEntityVbox(String entityName, EntityVBox entityVBox) {
-        entityVBoxMap.put(entityName, entityVBox);
+    public static void setSelectedRelationshipHeader(Text header) {
+        selectedRelationshipHeader = header;
     }
 
     private static void removeEntityVbox(String entityName) {
@@ -58,20 +59,30 @@ public class CanvasManager {
     }
     
     public static void setSelectedEntity(CanvasEntity entity){
+        if(selectedEntity != null){
+            EntityVBox previousSelectedEntityVbox = getEntityVboxByName(selectedEntity.getName());
+            previousSelectedEntityVbox.getStyleClass().remove("selected-entity");
+        }
+
         selectedEntity = entity;
+        if(entity != null) {
+            EntityVBox selectedEntityVbox = getEntityVboxByName(entity.getName());
+            selectedEntityVbox.getStyleClass().add("selected-entity");
+        }
         selectedEntityHeader.setText("Selected Entity: " + (entity != null ? entity.getName() : "None"));
     }
 
     public static void addEntity(CanvasEntity entity){
         EntityVBox entityVBox = new EntityVBox(entity, canvas);
-        entityVBox.setOnMouseClicked(ignore -> selectedEntity = entity);
         entityVBoxMap.put(entity.getName(), entityVBox);
         canvas.getChildren().add(entityVBox);
+        setSelectedEntity(entity);
     }
 
     public static void removeEntity(String entityName){
         CanvasEntity canvasEntity = getCanvasEntityFromName(entityName);
         removeEntityVbox(entityName);
+        setSelectedRelationship(null);
 
         canvas.getChildren().removeIf(child -> {
             if(child instanceof EntityVBox){
@@ -111,8 +122,33 @@ public class CanvasManager {
     //          RELATIONSHIPS
     // ==============================
 
+    public static EntityRelationship getSelectedRelationship(){
+        return selectedRelationship;
+    }
+
+    public static void setSelectedRelationship(EntityRelationship relationship){
+        if(selectedRelationship != null){
+            Optional<RelationshipLine> previousRelationshipLine = getRelationshipLineFromRelationship(selectedRelationship);
+            previousRelationshipLine.ifPresent(relationshipLine -> relationshipLine.getStyleClass().remove("selected-relationship"));
+        }
+
+        selectedRelationship = relationship;
+        if(relationship != null) {
+            Optional<RelationshipLine> selectedRelationshipLine = getRelationshipLineFromRelationship(relationship);
+            selectedRelationshipLine.ifPresent(relationshipLine -> relationshipLine.getStyleClass().add("selected-relationship"));
+        }
+        selectedRelationshipHeader.setText("Selected Relationship: " + (relationship != null ? relationship.compositeKey() : "None"));
+    }
+
     public static ObservableList<EntityRelationship> getRelationships() {
         return relationships;
+    }
+
+    public static Optional<RelationshipLine> getRelationshipLineFromRelationship(EntityRelationship relationship){
+        return relationshipLines
+                .stream()
+                .filter(line -> line.getRelationship().equals(relationship))
+                .findFirst();
     }
 
     public static void addRelationship(EntityRelationship relationship){
@@ -139,6 +175,7 @@ public class CanvasManager {
     }
 
     public static void removeRelationship(EntityRelationship relationship) {
+        setSelectedRelationship(null);
         relationships.remove(relationship);
         List<RelationshipLine> linesToRemove = new ArrayList<>(relationshipLines
                 .stream()
@@ -150,6 +187,7 @@ public class CanvasManager {
     }
 
     public static void updateRelationships(List<EntityRelationship> updatedRelationships) {
+        setSelectedRelationship(null);
         clearRelationshipLines();
         relationships.clear();
         relationships.addAll(updatedRelationships);
@@ -170,4 +208,6 @@ public class CanvasManager {
             addRelationshipLine(line);
         }
     }
+
+
 }

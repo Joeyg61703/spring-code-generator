@@ -1,6 +1,7 @@
 package com.josephgibis.springcodegenerator.canvas.visuals;
 
 import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -51,6 +52,7 @@ public class EntityVBox extends VBox {
     }
 
     private void handleMousePressed(MouseEvent event) {
+        CanvasManager.setSelectedEntity(this.entity);
         dragStartX = event.getSceneX() - getLayoutX();
         dragStartY = event.getSceneY() - getLayoutY();
         toFront();

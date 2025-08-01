@@ -20,6 +20,10 @@ public class EntityRelationship {
         return sourceEntity.equals(entity) || targetEntity.equals(entity);
     }
 
+    public String compositeKey(){
+        return sourceEntity.getName() + "->" + targetEntity.getName();
+    }
+
     // Getters and setters
     public CanvasEntity getSourceEntity() { return sourceEntity; }
     public void setSourceEntity(CanvasEntity sourceEntity) { this.sourceEntity = sourceEntity; }

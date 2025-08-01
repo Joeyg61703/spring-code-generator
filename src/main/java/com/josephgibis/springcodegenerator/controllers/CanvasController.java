@@ -18,6 +18,7 @@ import java.util.*;
 public class CanvasController implements Initializable {
 
     @FXML public Text selectedEntityHeader;
+    @FXML public Text selectedRelationshipHeader;
     @FXML private Pane canvas;
 
     private String componentsDir = "/com/josephgibis/springcodegenerator/components/";
@@ -28,7 +29,8 @@ public class CanvasController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         CanvasManager.setCanvas(canvas);
         CanvasManager.setSelectedEntityHeader(selectedEntityHeader);
-        canvas.setOnMouseClicked(this::handleCanvasClick);
+        CanvasManager.setSelectedRelationshipHeader(selectedRelationshipHeader);
+        canvas.setOnMousePressed(this::handleCanvasPress);
     }
 
     // ==============================
@@ -49,7 +51,7 @@ public class CanvasController implements Initializable {
     }
 
     @FXML
-    private void deleteEntity(){
+    private void deleteSelectedEntity(){
         if (CanvasManager.getSelectedEntity() == null) {
             showAlert("No Entity Selected", "Please select an entity first.");
             return;
@@ -83,9 +85,19 @@ public class CanvasController implements Initializable {
         //TODO: create table for many to many?
     }
 
-    private void handleCanvasClick(MouseEvent event) {
+    @FXML
+    private void deleteSelectedRelationship(){
+        if (CanvasManager.getSelectedRelationship() == null) {
+            showAlert("No Relationship Selected", "Please select a relationship first.");
+            return;
+        }
+        CanvasManager.removeRelationship(CanvasManager.getSelectedRelationship());
+    }
+
+    private void handleCanvasPress(MouseEvent event) {
         if (event.getTarget() == canvas) {
             CanvasManager.setSelectedEntity(null);
+            CanvasManager.setSelectedRelationship(null);
         }
     }
 
@@ -175,10 +187,32 @@ public class CanvasController implements Initializable {
         confirmationDialog.setHeaderText("This action cannot be undone.");
 
         Optional<ButtonType> selectedButton = confirmationDialog.showAndWait();
-        if(selectedButton.isEmpty()) return;
 
-        if(selectedButton.get().equals(confirmButton)){
-            deleteEntity();
+        if(selectedButton.isPresent() && selectedButton.get().equals(confirmButton)){
+            deleteSelectedEntity();
+        }
+    }
+
+    @FXML
+    private void deleteRelationshipAlert(){
+        if (CanvasManager.getSelectedRelationship() == null) {
+            showAlert("No Relationship Selected", "Please select a relationship first.");
+            return;
+        }
+
+        ButtonType confirmButton = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to delete the relationship '" + CanvasManager.getSelectedRelationship().compositeKey() + "'?",
+                confirmButton, cancelButton);
+        confirmationDialog.setTitle("Confirm Deletion");
+        confirmationDialog.setHeaderText("This action cannot be undone.");
+
+        Optional<ButtonType> selectedButton = confirmationDialog.showAndWait();
+
+        if(selectedButton.isPresent() && selectedButton.get().equals(confirmButton)){
+            deleteSelectedRelationship();
         }
     }
 

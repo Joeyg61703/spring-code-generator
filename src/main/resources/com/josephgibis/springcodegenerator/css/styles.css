@@ -100,3 +100,38 @@
     -fx-border-width: 0 1 1 1;
     -fx-padding: 5;
 }
+
+.h3.selected {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
+
+.relationship-line{
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
+}
+
+.relationship-label{
+   -fx-text-fill: white;
+   -fx-background-color: black;
+   -fx-background-radius: 8;
+   -fx-padding: 2 8 2 8;
+}
+
+.selected-entity {
+    -fx-border-color: red;
+    -fx-border-width: 4;
+    -fx-font-weight: bold;
+}
+
+.selected-relationship {
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+}
+
+.selected-relationship > .relationship-line {
+    -fx-stroke: red;
+    -fx-stroke-width: 4;
+}
+
+

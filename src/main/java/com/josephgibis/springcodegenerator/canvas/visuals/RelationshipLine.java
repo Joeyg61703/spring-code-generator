@@ -1,5 +1,6 @@
 package com.josephgibis.springcodegenerator.canvas.visuals;
 
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.canvas.EntityRelationship;
 import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 import javafx.application.Platform;
@@ -21,10 +22,13 @@ public class RelationshipLine extends Pane {
         this.targetVBox = targetVBox;
 
         line = new Line();
-        line.setStroke(Color.BLACK);
-        line.setStrokeWidth(2);
+        line.getStyleClass().add("relationship-line");
 
         relationshipLabel = createRelationshipLabel();
+
+        //prevents clicking on something not visible
+        //without this, can't click canvas near the line in some spots
+        setPickOnBounds(false);
 
         getChildren().addAll(line, relationshipLabel);
 
@@ -36,13 +40,8 @@ public class RelationshipLine extends Pane {
 
     private Label createRelationshipLabel() {
         Label label = new Label();
-        label.setTextFill(Color.WHITE);
-        label.setStyle(
-                "-fx-background-color: black; " +
-                "-fx-background-radius: 8; " +
-                "-fx-padding: 2 8 2 8; "
-
-                );
+        label.getStyleClass().add("relationship-label");
+        label.setOnMousePressed(event -> CanvasManager.setSelectedRelationship(this.relationship));
         return label;
     }
 

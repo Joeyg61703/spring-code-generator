@@ -8,9 +8,10 @@
 
     <!-- Toolbar -->
     <left>
-        <VBox styleClass="section-container" spacing="10" prefWidth="200">
+        <VBox styleClass="section-container" spacing="10" prefWidth="200" minWidth="200" maxWidth="200">
             <Text styleClass="h2" text="Entity Creator"/>
-            <Text fx:id="selectedEntityHeader" styleClass="h3" text="Selected Entity: None"/>
+            <Text fx:id="selectedEntityHeader" styleClass="h3" text="Selected Entity: None" wrappingWidth="200"/>
+            <Text fx:id="selectedRelationshipHeader" styleClass="h3" text="Selected Relationship: None" wrappingWidth="200"/>
 
             <Button text="Add Entity" onAction="#addNewEntity" styleClass="primary-button"/>
             <Button text="Add Relationship" onAction="#addRelationship" styleClass="primary-button"/>
@@ -20,6 +21,8 @@
             <Button text="Edit Relationship" onAction="#editRelationshipDialog" styleClass="primary-button"/>
             <Separator/>
             <Button text="Delete Entity" onAction="#deleteEntityAlert" styleClass="delete-button"/>
+            <Button text="Delete Relationship" onAction="#deleteRelationshipAlert" styleClass="delete-button"/>
+
         </VBox>
     </left>
 
