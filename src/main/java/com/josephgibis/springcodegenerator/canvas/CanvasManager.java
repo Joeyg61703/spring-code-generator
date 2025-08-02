@@ -147,6 +147,19 @@ public class CanvasManager {
         return relationships;
     }
 
+    public static List<EntityRelationship> getRelationshipsFromSourceEntity(CanvasEntity entity){
+        return relationships
+                .stream()
+                .filter(EntityRelationship -> EntityRelationship.getSourceEntity().equals(entity))
+                .toList();
+    }
+    public static  List<EntityRelationship> getRelationshipsFromTargetEntity(CanvasEntity entity) {
+        return relationships
+                .stream()
+                .filter(EntityRelationship -> EntityRelationship.getTargetEntity().equals(entity))
+                .toList();
+    }
+
     public static Optional<RelationshipLine> getRelationshipLineFromRelationship(EntityRelationship relationship){
         return relationshipLines
                 .stream()

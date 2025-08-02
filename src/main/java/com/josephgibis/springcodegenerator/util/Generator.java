@@ -4,6 +4,8 @@ import com.josephgibis.springcodegenerator.ProjectConfiguration;
 import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
 import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.canvas.EntityProperty;
+import com.josephgibis.springcodegenerator.canvas.EntityRelationship;
+import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -23,8 +25,11 @@ public class Generator {
     private static final Map<String, String> importMap = Map.of(
             "LocalDateTime", "java.time.LocalDateTime",
             "LocalDate", "java.time.LocalDate",
-            "UUID", "java.util.UUID"
+            "UUID", "java.util.UUID",
+            "List", "java.util.List"
     );
+
+    private static final Set<String> requiredImports = new HashSet<>();
 
     public Generator() {
         freeMarkerConfig.setDefaultEncoding("UTF-8");
@@ -217,10 +222,19 @@ public class Generator {
         model.put("idType", idType);
         model.put("idGeneration", "IDENTITY");
 
-        // Entity Properties
-        List<Map<String, Object>> templateProperties = new ArrayList<>();
-        Set<String> requiredImports = new HashSet<>() {
-        };
+
+        model.put("properties", getPropertyModelList(canvasEntity));
+        model.put("relationships", getRelationshipModelList(canvasEntity));
+        model.put("requiredImports", requiredImports);
+
+        // Generation Settings
+        model.put("useLombok", config.isUseLombok());
+
+        return model;
+    }
+
+    private List<Map<String, Object>> getPropertyModelList(CanvasEntity canvasEntity) {
+        List<Map<String, Object>> properties = new ArrayList<>();
         for (EntityProperty prop: canvasEntity.getProperties()) {
             Map<String, Object> propMap = new HashMap<>();
             propMap.put("name", prop.getName());
@@ -232,21 +246,68 @@ public class Generator {
             propMap.put("nameSnake", StringFormatter.makeSnakeCase(prop.getName()));
             propMap.put("namePascal", StringFormatter.makePascalCase(prop.getName()));
 
-            templateProperties.add(propMap);
+            properties.add(propMap);
 
             String type = prop.getType();
-            String importString = importMap.get(type);
-
-            if(importString != null){
-                requiredImports.add(importString);
-            }
+            addImportByType(type);
 
         }
-        model.put("properties", templateProperties);
-        model.put("requiredImports", requiredImports);
-        // Generation Settings
-        model.put("useLombok", config.isUseLombok());
+        return properties;
+    }
 
-        return model;
+    private List<Map<String, Object>> getRelationshipModelList(CanvasEntity entity){
+        List<Map<String, Object>> relationships = new ArrayList<>();
+        for(EntityRelationship relationship : CanvasManager.getRelationshipsFromSourceEntity(entity)){
+            Map<String, Object> relationshipObject = new HashMap<>();
+            relationshipObject.put("sourceEntity", relationship.getSourceEntity());
+            relationshipObject.put("targetEntity", relationship.getTargetEntity());
+            relationshipObject.put("relationshipType", relationship.getRelationshipType());
+            relationshipObject.put("inverseRelationshipType", relationship.getInverseRelationshipType());
+            relationshipObject.put("isSource", true);
+            relationships.add(relationshipObject);
+
+            String mappedByValue = StringFormatter.makeCamelCase(entity.getName());
+            relationshipObject.put("mappedByValue", mappedByValue);
+
+            String foreignKey = relationship.getForeignKeyProperty();
+            if (foreignKey != null) {
+                relationshipObject.put("foreignKeyProperty", foreignKey);
+            }
+
+
+            if(relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
+            || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)){
+                addImportByType("List");
+            }
+        }
+        for(EntityRelationship relationship : CanvasManager.getRelationshipsFromTargetEntity(entity)){
+            Map<String, Object> relationshipObject = new HashMap<>();
+            relationshipObject.put("sourceEntity", relationship.getSourceEntity());
+            relationshipObject.put("targetEntity", relationship.getTargetEntity());
+            relationshipObject.put("relationshipType", relationship.getRelationshipType());
+            relationshipObject.put("inverseRelationshipType", relationship.getInverseRelationshipType());
+            relationshipObject.put("isSource", false);
+            relationships.add(relationshipObject);
+
+            String mappedByValue = StringFormatter.makeCamelCase(relationship.getSourceEntity().getName());
+            relationshipObject.put("mappedByValue", mappedByValue);
+
+            String foreignKey = relationship.getForeignKeyProperty();
+            if (foreignKey != null) {
+                relationshipObject.put("foreignKeyProperty", foreignKey);
+            }
+
+            if(relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
+                    || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)){
+                addImportByType("List");
+            }
+        }
+        return relationships;
+    }
+
+    private void addImportByType(String type){
+        if(importMap.containsKey(type)){
+            requiredImports.add(importMap.get(type));
+        }
     }
 }

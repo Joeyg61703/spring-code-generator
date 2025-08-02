@@ -16,7 +16,11 @@ public class EntityRelationship {
         this.sourceEntity = sourceEntity;
         this.targetEntity = targetEntity;
         this.relationshipType = type;
-        this.foreignKeyProperty = targetEntity.getName().toLowerCase() + "_id";
+        switch (type) {
+            case ONE_TO_MANY, ONE_TO_ONE -> this.foreignKeyProperty = sourceEntity.getName().toLowerCase() + "_id";
+            case MANY_TO_ONE -> this.foreignKeyProperty = targetEntity.getName().toLowerCase() + "_id";
+            case MANY_TO_MANY -> this.foreignKeyProperty = null;
+        }
     }
 
     public boolean containsEntity(CanvasEntity entity){
@@ -25,6 +29,17 @@ public class EntityRelationship {
 
     public String compositeKey(){
         return sourceEntity.getName() + "->" + targetEntity.getName();
+    }
+
+    public RelationshipType getInverseRelationshipType(){
+        RelationshipType inverse = null;
+        switch (this.relationshipType){
+            case ONE_TO_MANY -> inverse = RelationshipType.MANY_TO_ONE;
+            case MANY_TO_ONE -> inverse = RelationshipType.ONE_TO_MANY;
+            case MANY_TO_MANY -> inverse = RelationshipType.MANY_TO_MANY;
+            case ONE_TO_ONE -> inverse = RelationshipType.ONE_TO_ONE;
+        }
+        return inverse;
     }
 
     @JsonProperty("sourceEntity")
@@ -50,4 +65,5 @@ public class EntityRelationship {
 
     @JsonProperty("foreignKeyProperty")
     public void setForeignKeyProperty(String foreignKeyProperty) { this.foreignKeyProperty = foreignKeyProperty; }
+
 }
