@@ -61,7 +61,9 @@ public class CanvasManager {
     public static void setSelectedEntity(CanvasEntity entity){
         if(selectedEntity != null){
             EntityVBox previousSelectedEntityVbox = getEntityVboxByName(selectedEntity.getName());
-            previousSelectedEntityVbox.getStyleClass().remove("selected-entity");
+            if(previousSelectedEntityVbox != null){
+                previousSelectedEntityVbox.getStyleClass().remove("selected-entity");
+            }
         }
 
         selectedEntity = entity;
@@ -96,6 +98,7 @@ public class CanvasManager {
         relationships.removeIf(relationship -> relationship.containsEntity(canvasEntity));
         relationshipLines.removeIf(line -> line.getRelationship().containsEntity(canvasEntity));
 
+        setSelectedEntity(null);
     }
 
     public static void updateEntityByName(String originalName, CanvasEntity updatedEntity){
