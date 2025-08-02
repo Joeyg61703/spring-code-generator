@@ -1,6 +1,7 @@
 package com.josephgibis.springcodegenerator.controllers;
 
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.util.Generator;
 
 import javafx.fxml.FXML;
@@ -70,20 +71,22 @@ public class ConfigController implements Initializable {
 
         Generator generator = new Generator();
 
-        if (config.isGenerateEntity()) {
-            generator.generateEntityFile();
-        }
-        if (config.isGenerateDto()) {
-            generator.generateDTOFile();
-        }
-        if (config.isGenerateRepository()) {
-            generator.generateRepositoryFile();
-        }
-        if (config.isGenerateService()) {
-            generator.generateServiceFile();
-        }
-        if (config.isGenerateController()) {
-            generator.generateControllerFile();
+        for(String entityName : CanvasManager.getEntityNameList()){
+            if (config.isGenerateEntity()) {
+                generator.generateEntityFile(entityName);
+            }
+            if (config.isGenerateDto()) {
+                generator.generateDTOFile(entityName);
+            }
+            if (config.isGenerateRepository()) {
+                generator.generateRepositoryFile(entityName);
+            }
+            if (config.isGenerateService()) {
+                generator.generateServiceFile(entityName);
+            }
+            if (config.isGenerateController()) {
+                generator.generateControllerFile(entityName);
+            }
         }
 
         showAlert("Success", "Files generated successfully!");

@@ -1,6 +1,9 @@
 package ${basePackage}.${entityPackage};
 
 import jakarta.persistence.*;
+<#list requiredImports as import>
+import ${import};
+</#list>
 <#if useLombok>
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,14 +28,12 @@ public class ${entityNamePascal}<#if extendsClass?has_content && extendsClass !=
     private ${idType} id;
 
 <#list properties as property>
-    <#if !property.nullable || property.unique>
-    @Column(<#if !property.nullable>nullable = false</#if><#if !property.nullable && property.unique>, </#if><#if property.unique>unique = true</#if>)
-    </#if>
+
+    @Column(name = "${property.nameSnake}"<#if !property.nullable>, nullable = false</#if><#if property.unique>, unique = true</#if>)
     private ${property.type} ${property.name}<#if property.defaultValue?has_content && property.defaultValue != ""> = <#if property.type == "String">"${property.defaultValue}"<#else>${property.defaultValue}</#if></#if>;
 
 </#list>
 <#if !useLombok>
-    // Getters and Setters
     public ${idType} getId() {
     return id;
     }

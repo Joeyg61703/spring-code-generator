@@ -1,6 +1,9 @@
 package com.josephgibis.springcodegenerator.util;
 
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
+import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
+import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -9,10 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO: rewrite this
 public class Generator {
@@ -20,11 +20,17 @@ public class Generator {
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
     private final Configuration freeMarkerConfig = new Configuration(Configuration.VERSION_2_3_31);
 
+    private static final Map<String, String> importMap = Map.of(
+            "LocalDateTime", "java.time.LocalDateTime",
+            "LocalDate", "java.time.LocalDate",
+            "UUID", "java.util.UUID"
+    );
+
     public Generator() {
         freeMarkerConfig.setDefaultEncoding("UTF-8");
     }
 
-    private String generateFileContentFromTemplate(String templateName) {
+    private String generateFileContentFromTemplate(String templateName, String entityName) {
         try {
             String templatePath = "/com/josephgibis/springcodegenerator/templates/" + templateName;
             InputStream inputStream = Generator.class.getResourceAsStream(templatePath);
@@ -35,7 +41,7 @@ public class Generator {
             String templateContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             Template template = new Template(templateName, new StringReader(templateContent), freeMarkerConfig);
 
-            Map<String, Object> model = createDataModel();
+            Map<String, Object> model = createDataModel(entityName);
             StringWriter writer = new StringWriter();
             template.process(model, writer);
             return writer.toString();
@@ -49,12 +55,6 @@ public class Generator {
 
     private void writeToFile(String packagePath, String fileName, String fileContent) {
         try {
-//            File outputDir = new File("output");
-//            if (!outputDir.exists()) {
-//                outputDir.mkdirs();
-//                System.out.println("Created Output Directory: " + outputDir.getAbsolutePath());
-//            }
-
 
             String dirPath = packagePath.replace(".", File.separator);
             File targetDir = new File(config.getSourceDirectory(), dirPath);
@@ -82,84 +82,84 @@ public class Generator {
         }
     }
 
-    public void generateEntityFile() {
-        String className = "";
+    public void generateEntityFile(String entityName) {
+        String className = entityName;
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("Entity.java.ftl");
+            String fileContent = generateFileContentFromTemplate("Entity.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getEntityPackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
     }
 
-    public void generateDTOFile() {
-        String className = "" + "DTO";
+    public void generateDTOFile(String entityName) {
+        String className = entityName + "DTO";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("DTO.java.ftl");
+            String fileContent = generateFileContentFromTemplate("DTO.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getDtoPackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
     }
 
-    public void generateServiceFile() {
-        String className = "" + "Service";
+    public void generateServiceFile(String entityName) {
+        String className = entityName + "Service";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("Service.java.ftl");
+            String fileContent = generateFileContentFromTemplate("Service.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getServicePackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
     }
 
-    public void generateServiceImplFile() {
-        String className = "" + "ServiceImpl";
+    public void generateServiceImplFile(String entityName) {
+        String className = entityName + "ServiceImpl";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("ServiceImpl.java.ftl");
+            String fileContent = generateFileContentFromTemplate("ServiceImpl.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getServicePackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
     }
 
-    public void generateControllerFile() {
-        String className = "" + "Controller";
+    public void generateControllerFile(String entityName) {
+        String className = entityName + "Controller";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("Controller.java.ftl");
+            String fileContent = generateFileContentFromTemplate("Controller.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getControllerPackage();
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {}
     }
 
-    public void generateRepositoryFile() {
-        String className = "" + "Repository";
+    public void generateRepositoryFile(String entityName) {
+        String className = entityName + "Repository";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("Repository.java.ftl");
+            String fileContent = generateFileContentFromTemplate("Repository.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getRepositoryPackage();
             writeToFile(packagePath, fileName, fileContent);
 
@@ -172,8 +172,11 @@ public class Generator {
         return now.format(formatter);
     }
 
-    private Map<String, Object> createDataModel() {
+    private Map<String, Object> createDataModel(String entityName) {
         Map<String, Object> model = new HashMap<>();
+
+        CanvasEntity canvasEntity = CanvasManager.getCanvasEntityFromName(entityName);
+
 
         // Package Info
         model.put("basePackage", config.getBasePackage());
@@ -184,11 +187,10 @@ public class Generator {
         model.put("dtoPackage", config.getDtoPackage());
 
         // assuming entityName is in pascalCase we can make other casings
-        String entityName = "";
         String pluralEntityName =  StringFormatter.makePlural(entityName);
 
         // Entity Info
-        model.put("entityName", "");
+        model.put("entityName", entityName);
         model.put("pluralEntityName", pluralEntityName);
 
         model.put("entityNameCamel", StringFormatter.makeCamelCase(entityName));
@@ -199,30 +201,49 @@ public class Generator {
         model.put("pluralEntityNameSnake", StringFormatter.makeSnakeCase(pluralEntityName)); // (my preferred table name)
         model.put("pluralEntityNamePascal", StringFormatter.makePascalCase(pluralEntityName));
 
-//        model.put("extendsClass", config.getExtendsClass());
-//
         String tableName = "";
-        if (tableName == null || tableName.trim().isEmpty()) {
-            tableName = StringFormatter.makeSnakeCase("");
-        }
-        model.put("tableName", tableName);
+        String idType = "Long";
 
-//        model.put("idType", config.getIdType());
-//        model.put("idGeneration", config.getIdGeneration());
+        if (canvasEntity != null) {
+            tableName = canvasEntity.getTableName();
+            idType = canvasEntity.getIdType();
+        }
+
+        if (tableName == null || tableName.trim().isEmpty()) {
+            tableName = StringFormatter.makeSnakeCase(pluralEntityName);
+        }
+
+        model.put("tableName", tableName);
+        model.put("idType", idType);
+        model.put("idGeneration", "IDENTITY");
 
         // Entity Properties
         List<Map<String, Object>> templateProperties = new ArrayList<>();
-//        for (EntityProperty prop : config.getProperties()) {
-//            Map<String, Object> propMap = new HashMap<>();
-//            propMap.put("name", prop.getName());
-//            propMap.put("type", prop.getType());
-//            propMap.put("nullable", prop.isNullable());
-//            propMap.put("unique", prop.isUnique());
-//            propMap.put("defaultValue", prop.getDefaultValue() != null ? prop.getDefaultValue() : "");
-//            templateProperties.add(propMap);
-//        }
-        model.put("properties", templateProperties);
+        Set<String> requiredImports = new HashSet<>() {
+        };
+        for (EntityProperty prop: canvasEntity.getProperties()) {
+            Map<String, Object> propMap = new HashMap<>();
+            propMap.put("name", prop.getName());
+            propMap.put("type", prop.getType());
+            propMap.put("nullable", prop.isNullable());
+            propMap.put("unique", prop.isUnique());
 
+            propMap.put("nameCamel", StringFormatter.makeCamelCase(prop.getName()));
+            propMap.put("nameSnake", StringFormatter.makeSnakeCase(prop.getName()));
+            propMap.put("namePascal", StringFormatter.makePascalCase(prop.getName()));
+
+            templateProperties.add(propMap);
+
+            String type = prop.getType();
+            String importString = importMap.get(type);
+
+            if(importString != null){
+                requiredImports.add(importString);
+            }
+
+        }
+        model.put("properties", templateProperties);
+        model.put("requiredImports", requiredImports);
         // Generation Settings
         model.put("useLombok", config.isUseLombok());
 
