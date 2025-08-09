@@ -1,8 +1,8 @@
 package ${basePackage}.${servicePackage};
 
-import ${basePackage}.${dtoPackage}.${entityNamePascal}Dto;
-import ${basePackage}.${dtoPackage}.Create${entityNamePascal}Request;
-import ${basePackage}.${dtoPackage}.requests.Update${entityNamePascal}Request;
+import ${basePackage}.${dtoPackage}.${entityNamePascal}ResponseDTO;
+import ${basePackage}.${dtoPackage}.Create${entityNamePascal}RequestDTO;
+import ${basePackage}.${dtoPackage}.requests.Update${entityNamePascal}RequestDTO;
 import java.util.List;
 <#if idType == "UUID">
 import java.util.UUID;
@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface ${entityNamePascal}Service {
 
-    ${entityNamePascal}Dto create${entityNamePascal}(Create${entityNamePascal}Request create${entityNamePascal}Request);
+    ${entityNamePascal}ResponseDTO create${entityNamePascal}(Create${entityNamePascal}RequestDTO create${entityNamePascal}RequestDTO);
 
-    ${entityNamePascal}Dto get${entityNamePascal}ById(${idType} id);
+    ${entityNamePascal}ResponseDTO get${entityNamePascal}ById(${idType} id);
 
-    List<${entityNamePascal}Dto> getAll${pluralEntityNamePascal}();
+    List<${entityNamePascal}ResponseDTO> getAll${pluralEntityNamePascal}();
 
-    ${entityNamePascal}Dto update${entityNamePascal}(${idType} id, Update${entityNamePascal}Request update${entityNamePascal}Request);
+    ${entityNamePascal}ResponseDTO update${entityNamePascal}(${idType} id, Update${entityNamePascal}RequestDTO update${entityNamePascal}RequestDTO);
 
     void delete${entityNamePascal}(${idType} id);
 

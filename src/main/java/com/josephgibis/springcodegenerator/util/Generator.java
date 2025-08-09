@@ -36,10 +36,10 @@ public class Generator {
             "LocalDateTime", "java.time.LocalDateTime",
             "LocalDate", "java.time.LocalDate",
             "UUID", "java.util.UUID",
-            "List", "java.util.List"
-    );
+            "List", "java.util.List");
 
     private static final Set<String> requiredImports = new HashSet<>();
+    private static boolean hasList = false;
 
     public Generator() {
         freeMarkerConfig.setDefaultEncoding("UTF-8");
@@ -56,21 +56,59 @@ public class Generator {
             String packagePath = config.getBasePackage() + "." + config.getEntityPackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
-    public void generateDTOFile(String entityName) {
-        String className = entityName + "DTO";
+    public void generateDTOFiles(String entityName) {
+        generateCreateRequestDTOFile(entityName);
+        generateUpdateRequestDTOFile(entityName);
+        generateResponseDTOFile(entityName);
+    }
+
+    private void generateCreateRequestDTOFile(String entityName) {
+        String className = "Create" + entityName + "RequestDTO";
         String fileName = className + ".java";
 
         System.out.println(timeStamp() + ": Generating " + fileName);
 
         try {
-            String fileContent = generateFileContentFromTemplate("DTO.java.ftl", entityName);
+            String fileContent = generateFileContentFromTemplate("CreateRequestDTO.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getDtoPackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
+    }
+
+    private void generateUpdateRequestDTOFile(String entityName) {
+        String className = "Update" + entityName + "RequestDTO";
+        String fileName = className + ".java";
+
+        System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("UpdateRequestDTO.java.ftl", entityName);
+            String packagePath = config.getBasePackage() + "." + config.getDtoPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {
+        }
+    }
+
+    private void generateResponseDTOFile(String entityName) {
+        String className = entityName + "ResponseDTO";
+        String fileName = className + ".java";
+
+        System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("ResponseDTO.java.ftl", entityName);
+            String packagePath = config.getBasePackage() + "." + config.getDtoPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {
+        }
     }
 
     public void generateServiceFile(String entityName) {
@@ -84,7 +122,8 @@ public class Generator {
             String packagePath = config.getBasePackage() + "." + config.getServicePackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void generateServiceImplFile(String entityName) {
@@ -98,7 +137,8 @@ public class Generator {
             String packagePath = config.getBasePackage() + "." + config.getServicePackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void generateControllerFile(String entityName) {
@@ -112,7 +152,8 @@ public class Generator {
             String packagePath = config.getBasePackage() + "." + config.getControllerPackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void generateRepositoryFile(String entityName) {
@@ -126,7 +167,8 @@ public class Generator {
             String packagePath = config.getBasePackage() + "." + config.getRepositoryPackage();
             writeToFile(packagePath, fileName, fileContent);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     private String generateFileContentFromTemplate(String templateName, String entityName) {
@@ -158,7 +200,8 @@ public class Generator {
             String dirPath = packagePath.replace(".", File.separator);
             File targetDir = new File(config.getSourceDirectory(), dirPath);
 
-            // This will generate the packages the user sets if they do not exist (entities, controllers, etc)
+            // This will generate the packages the user sets if they do not exist (entities,
+            // controllers, etc)
             if (!targetDir.exists()) {
                 targetDir.mkdirs();
             }
@@ -181,7 +224,6 @@ public class Generator {
         }
     }
 
-
     private String timeStamp() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -193,7 +235,6 @@ public class Generator {
 
         CanvasEntity canvasEntity = CanvasManager.getCanvasEntityFromName(entityName);
 
-
         // Package Info
         model.put("basePackage", config.getBasePackage());
         model.put("entityPackage", config.getEntityPackage());
@@ -203,7 +244,7 @@ public class Generator {
         model.put("dtoPackage", config.getDtoPackage());
 
         // assuming entityName is in pascalCase we can make other casings
-        String pluralEntityName =  StringFormatter.makePlural(entityName);
+        String pluralEntityName = StringFormatter.makePlural(entityName);
 
         // Entity Info
         model.put("entityName", entityName);
@@ -211,10 +252,12 @@ public class Generator {
 
         model.put("entityNameCamel", StringFormatter.makeCamelCase(entityName));
         model.put("entityNameSnake", StringFormatter.makeSnakeCase(entityName));
-        model.put("entityNamePascal", StringFormatter.makePascalCase(entityName)); //probably is the same but just nicer to read in ftl files
+        model.put("entityNamePascal", StringFormatter.makePascalCase(entityName)); // probably is the same but just
+                                                                                   // nicer to read in ftl files
 
         model.put("pluralEntityNameCamel", StringFormatter.makeCamelCase(pluralEntityName));
-        model.put("pluralEntityNameSnake", StringFormatter.makeSnakeCase(pluralEntityName)); // (my preferred table name)
+        model.put("pluralEntityNameSnake", StringFormatter.makeSnakeCase(pluralEntityName)); // (my preferred table
+                                                                                             // name)
         model.put("pluralEntityNamePascal", StringFormatter.makePascalCase(pluralEntityName));
 
         String tableName = "";
@@ -233,10 +276,10 @@ public class Generator {
         model.put("idType", idType);
         model.put("idGeneration", "IDENTITY");
 
-
         model.put("properties", getPropertyModelList(canvasEntity));
         model.put("relationships", getRelationshipModelList(canvasEntity));
         model.put("requiredImports", requiredImports);
+        model.put("hasList", hasList);
 
         // Generation Settings
         model.put("useLombok", config.isUseLombok());
@@ -246,12 +289,15 @@ public class Generator {
 
     private List<Map<String, Object>> getPropertyModelList(CanvasEntity canvasEntity) {
         List<Map<String, Object>> properties = new ArrayList<>();
-        for (EntityProperty prop: canvasEntity.getProperties()) {
+        for (EntityProperty prop : canvasEntity.getProperties()) {
             Map<String, Object> propMap = new HashMap<>();
             propMap.put("name", prop.getName());
             propMap.put("type", prop.getType());
             propMap.put("nullable", prop.isNullable());
             propMap.put("unique", prop.isUnique());
+            propMap.put("includeInCreateRequest", prop.isIncludeInCreateRequest());
+            propMap.put("includeInUpdateRequest", prop.isIncludeInUpdateRequest());
+            propMap.put("includeInResponse", prop.isIncludeInResponse());
 
             propMap.put("nameCamel", StringFormatter.makeCamelCase(prop.getName()));
             propMap.put("nameSnake", StringFormatter.makeSnakeCase(prop.getName()));
@@ -266,9 +312,9 @@ public class Generator {
         return properties;
     }
 
-    private List<Map<String, Object>> getRelationshipModelList(CanvasEntity entity){
+    private List<Map<String, Object>> getRelationshipModelList(CanvasEntity entity) {
         List<Map<String, Object>> relationships = new ArrayList<>();
-        for(EntityRelationship relationship : CanvasManager.getRelationshipsFromSourceEntity(entity)){
+        for (EntityRelationship relationship : CanvasManager.getRelationshipsFromSourceEntity(entity)) {
             Map<String, Object> relationshipObject = new HashMap<>();
             relationshipObject.put("sourceEntity", relationship.getSourceEntity());
             relationshipObject.put("targetEntity", relationship.getTargetEntity());
@@ -285,13 +331,12 @@ public class Generator {
                 relationshipObject.put("foreignKeyProperty", foreignKey);
             }
 
-
-            if(relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
-            || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)){
-                addImportByType("List");
+            if (relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
+                    || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)) {
+                hasList = true;
             }
         }
-        for(EntityRelationship relationship : CanvasManager.getRelationshipsFromTargetEntity(entity)){
+        for (EntityRelationship relationship : CanvasManager.getRelationshipsFromTargetEntity(entity)) {
             Map<String, Object> relationshipObject = new HashMap<>();
             relationshipObject.put("sourceEntity", relationship.getSourceEntity());
             relationshipObject.put("targetEntity", relationship.getTargetEntity());
@@ -308,16 +353,16 @@ public class Generator {
                 relationshipObject.put("foreignKeyProperty", foreignKey);
             }
 
-            if(relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
-                    || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)){
-                addImportByType("List");
+            if (relationship.getRelationshipType().equals(RelationshipType.ONE_TO_MANY)
+                    || relationship.getRelationshipType().equals(RelationshipType.MANY_TO_MANY)) {
+                hasList = true;
             }
         }
         return relationships;
     }
 
-    private void addImportByType(String type){
-        if(importMap.containsKey(type)){
+    private void addImportByType(String type) {
+        if (importMap.containsKey(type)) {
             requiredImports.add(importMap.get(type));
         }
     }

@@ -1,39 +1,53 @@
 package com.josephgibis.springcodegenerator.controllers;
 
-import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
-import com.josephgibis.springcodegenerator.canvas.CanvasManager;
-import com.josephgibis.springcodegenerator.canvas.EntityProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
+import com.josephgibis.springcodegenerator.canvas.CanvasManager;
+import com.josephgibis.springcodegenerator.canvas.EntityProperty;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 public class EntityController implements Initializable {
 
     private String componentsDir = "/com/josephgibis/springcodegenerator/components/";
-    private final ObservableList<EntityProperty> dialogProperties =  FXCollections.observableArrayList();
+    private final ObservableList<EntityProperty> dialogProperties = FXCollections.observableArrayList();
 
     public TextField entityNameField;
     public TextField tableNameField;
 
-    @FXML public TableView<EntityProperty> propertiesTable;
-    @FXML public TableColumn<EntityProperty, String> nameColumn;
-    @FXML public TableColumn<EntityProperty, String> typeColumn;
-    @FXML public TableColumn<EntityProperty, Void> editColumn;
-    @FXML public TableColumn<EntityProperty, Void> deleteColumn;
+    @FXML
+    public TableView<EntityProperty> propertiesTable;
+    @FXML
+    public TableColumn<EntityProperty, String> nameColumn;
+    @FXML
+    public TableColumn<EntityProperty, String> typeColumn;
+    @FXML
+    public TableColumn<EntityProperty, Void> editColumn;
+    @FXML
+    public TableColumn<EntityProperty, Void> deleteColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupPropertiesTable();
     }
+
     private void setupPropertiesTable() {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -76,7 +90,8 @@ public class EntityController implements Initializable {
 
     private void editProperty(EntityProperty property) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(componentsDir + "dialogs/add-property-dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(componentsDir + "dialogs/add-property-dialog.fxml"));
             DialogPane dialogPane = loader.load();
             PropertyController propertyController = loader.getController();
 
@@ -87,9 +102,9 @@ public class EntityController implements Initializable {
             dialog.setTitle("Edit Property: " + property.getName());
             dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-            Optional<ButtonType> selectedButton =  dialog.showAndWait();
+            Optional<ButtonType> selectedButton = dialog.showAndWait();
 
-            if(selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)){
+            if (selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)) {
                 EntityProperty updatedProperty = propertyController.createProperty();
                 property.setName(updatedProperty.getName());
                 property.setType(updatedProperty.getType());
@@ -98,22 +113,25 @@ public class EntityController implements Initializable {
 
                 propertiesTable.refresh();
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 
-    public void loadEntity(CanvasEntity entity){
+    public void loadEntity(CanvasEntity entity) {
 
         entityNameField.setText(entity.getName());
         tableNameField.setText(entity.getTableName());
-        //TODO: id type
+        // TODO: id type
 
-        for(EntityProperty property : entity.getProperties()){
+        for (EntityProperty property : entity.getProperties()) {
             EntityProperty propertyCopy = new EntityProperty(
                     property.getName(),
                     property.getType(),
                     property.isNullable(),
-                    property.isUnique()
-            );
+                    property.isUnique(),
+                    property.isIncludeInCreateRequest(),
+                    property.isIncludeInUpdateRequest(),
+                    property.isIncludeInResponse());
             dialogProperties.add(propertyCopy);
         }
 
@@ -122,7 +140,7 @@ public class EntityController implements Initializable {
 
     }
 
-    public void updateEntity(){
+    public void updateEntity() {
 
         System.out.println("Updating entity: " + CanvasManager.getSelectedEntity().getName());
 
@@ -133,20 +151,20 @@ public class EntityController implements Initializable {
         selectedEntity.setTableName(tableNameField.getText());
 
         selectedEntity.getProperties().clear();
-        for(EntityProperty property : dialogProperties){
+        for (EntityProperty property : dialogProperties) {
             EntityProperty propertyCopy = new EntityProperty(
                     property.getName(),
                     property.getType(),
                     property.isNullable(),
-                    property.isUnique()
-            );
+                    property.isUnique(),
+                    property.isIncludeInCreateRequest(),
+                    property.isIncludeInUpdateRequest(),
+                    property.isIncludeInResponse());
             selectedEntity.getProperties().add(propertyCopy);
         }
 
         CanvasManager.updateEntityByName(originalName, selectedEntity);
     }
-
-
 
     @FXML
     public void showAddPropertyDialog() throws IOException {
@@ -159,9 +177,9 @@ public class EntityController implements Initializable {
         dialog.setTitle("Add Property");
         dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        Optional<ButtonType> selectedButton =  dialog.showAndWait();
+        Optional<ButtonType> selectedButton = dialog.showAndWait();
 
-        if(selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)){
+        if (selectedButton.isPresent() && selectedButton.get().equals(ButtonType.OK)) {
             EntityProperty newProperty = propertyController.createProperty();
             dialogProperties.add(newProperty);
         }

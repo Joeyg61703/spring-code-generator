@@ -38,7 +38,12 @@
             <VBox spacing="8">
                 <CheckBox fx:id="nullableCheckBox" text="Nullable" selected="true"/>
                 <CheckBox fx:id="uniqueCheckBox" text="Unique"/>
+                <CheckBox fx:id="updatableCheckBox" text="Updatable" selected="true"/>
+                <CheckBox fx:id="includeInCreateRequestCheckBox" text="Include in Create Request" selected="true"/>
+                <CheckBox fx:id="includeInUpdateRequestCheckBox" text="Include in Update Request" selected="true"/>
+                <CheckBox fx:id="includeInResponseCheckBox" text="Include in Response" selected="true"/>
             </VBox>
+
         </VBox>
     </content>
 </DialogPane>

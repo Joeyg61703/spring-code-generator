@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 <#list requiredImports as import>
 import ${import};
 </#list>
+<#if hasList>
+import java.util.List;
+</#if>
 <#if useLombok>
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -97,11 +100,11 @@ public class ${entityNamePascal}<#if extendsClass?has_content && extendsClass !=
     }
 
     <#list properties as property>
-    public ${property.type} get${property.name?cap_first}() {
+    public ${property.type} get${property.namePascal}() {
         return ${property.name};
     }
 
-    public void set${property.name?cap_first}(${property.type} ${property.name}) {
+    public void set${property.namePascal}(${property.type} ${property.name}) {
         this.${property.name} = ${property.name};
     }
 

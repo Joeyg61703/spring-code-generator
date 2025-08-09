@@ -94,7 +94,7 @@ public class ConfigController implements Initializable {
                 generator.generateEntityFile(entityName);
             }
             if (config.isGenerateDto()) {
-                generator.generateDTOFile(entityName);
+                generator.generateDTOFiles(entityName);
             }
             if (config.isGenerateRepository()) {
                 generator.generateRepositoryFile(entityName);
