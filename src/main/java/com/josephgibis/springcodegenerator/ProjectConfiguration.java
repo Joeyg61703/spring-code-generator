@@ -1,6 +1,9 @@
 package com.josephgibis.springcodegenerator;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class ProjectConfiguration {
     // Project Tab Fields
@@ -12,6 +15,7 @@ public class ProjectConfiguration {
     private final BooleanProperty generateDto = new SimpleBooleanProperty(true);
     private final BooleanProperty generateRepository = new SimpleBooleanProperty(true);
     private final BooleanProperty generateService = new SimpleBooleanProperty(true);
+    private final BooleanProperty generateServiceImpl = new SimpleBooleanProperty(true);
     private final BooleanProperty generateController = new SimpleBooleanProperty(true);
 
     // Package Names
@@ -63,6 +67,10 @@ public class ProjectConfiguration {
     public BooleanProperty generateServiceProperty() { return generateService; }
     public boolean isGenerateService() { return generateService.get(); }
     public void setGenerateService(boolean generateService) { this.generateService.set(generateService); }
+    
+    public BooleanProperty generateServiceImplProperty() { return generateServiceImpl; }
+    public boolean isGenerateServiceImpl() { return generateServiceImpl.get(); }
+    public void setGenerateServiceImpl(boolean generateServiceImpl) { this.generateServiceImpl.set(generateServiceImpl); }
 
     public BooleanProperty generateControllerProperty() { return generateController; }
     public boolean isGenerateController() { return generateController.get(); }

@@ -1,22 +1,32 @@
 package com.josephgibis.springcodegenerator.util;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
 import com.josephgibis.springcodegenerator.canvas.CanvasEntity;
 import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.canvas.EntityProperty;
 import com.josephgibis.springcodegenerator.canvas.EntityRelationship;
 import com.josephgibis.springcodegenerator.canvas.enums.RelationshipType;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-//TODO: rewrite this
 public class Generator {
 
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
@@ -33,58 +43,6 @@ public class Generator {
 
     public Generator() {
         freeMarkerConfig.setDefaultEncoding("UTF-8");
-    }
-
-    private String generateFileContentFromTemplate(String templateName, String entityName) {
-        try {
-            String templatePath = "/com/josephgibis/springcodegenerator/templates/" + templateName;
-            InputStream inputStream = Generator.class.getResourceAsStream(templatePath);
-            if (inputStream == null) {
-                throw new IOException("Template not found in: " + templatePath);
-            }
-
-            String templateContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            Template template = new Template(templateName, new StringReader(templateContent), freeMarkerConfig);
-
-            Map<String, Object> model = createDataModel(entityName);
-            StringWriter writer = new StringWriter();
-            template.process(model, writer);
-            return writer.toString();
-
-        } catch (IOException | TemplateException e) {
-            System.err.println("Error processing template " + templateName + ": " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void writeToFile(String packagePath, String fileName, String fileContent) {
-        try {
-
-            String dirPath = packagePath.replace(".", File.separator);
-            File targetDir = new File(config.getSourceDirectory(), dirPath);
-
-            // This will generate the packages the user sets if they do not exist (entities, controllers, etc)
-            if (!targetDir.exists()) {
-                targetDir.mkdirs();
-            }
-
-            File targetFile = new File(targetDir, fileName);
-
-            if (targetFile.exists() && !config.isOverwriteFiles()) {
-                System.out.println("Failed to create file (" + fileName + "): file already exists");
-                return;
-            }
-
-            try (FileWriter fileWriter = new FileWriter(targetFile)) {
-                fileWriter.write(fileContent);
-                System.out.println("Successfully created file: " + fileName);
-            }
-
-        } catch (IOException e) {
-            System.err.println("Failed to create file (" + fileName + "): " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     public void generateEntityFile(String entityName) {
@@ -170,6 +128,59 @@ public class Generator {
 
         } catch (Exception e) {}
     }
+
+    private String generateFileContentFromTemplate(String templateName, String entityName) {
+        try {
+            String templatePath = "/com/josephgibis/springcodegenerator/templates/" + templateName;
+            InputStream inputStream = Generator.class.getResourceAsStream(templatePath);
+            if (inputStream == null) {
+                throw new IOException("Template not found in: " + templatePath);
+            }
+
+            String templateContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            Template template = new Template(templateName, new StringReader(templateContent), freeMarkerConfig);
+
+            Map<String, Object> model = createDataModel(entityName);
+            StringWriter writer = new StringWriter();
+            template.process(model, writer);
+            return writer.toString();
+
+        } catch (IOException | TemplateException e) {
+            System.err.println("Error processing template " + templateName + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void writeToFile(String packagePath, String fileName, String fileContent) {
+        try {
+
+            String dirPath = packagePath.replace(".", File.separator);
+            File targetDir = new File(config.getSourceDirectory(), dirPath);
+
+            // This will generate the packages the user sets if they do not exist (entities, controllers, etc)
+            if (!targetDir.exists()) {
+                targetDir.mkdirs();
+            }
+
+            File targetFile = new File(targetDir, fileName);
+
+            if (targetFile.exists() && !config.isOverwriteFiles()) {
+                System.out.println("Failed to create file (" + fileName + "): file already exists");
+                return;
+            }
+
+            try (FileWriter fileWriter = new FileWriter(targetFile)) {
+                fileWriter.write(fileContent);
+                System.out.println("Successfully created file: " + fileName);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Failed to create file (" + fileName + "): " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     private String timeStamp() {
         LocalDateTime now = LocalDateTime.now();

@@ -1,47 +1,65 @@
 package com.josephgibis.springcodegenerator.controllers;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.josephgibis.springcodegenerator.ProjectConfiguration;
 import com.josephgibis.springcodegenerator.canvas.CanvasManager;
 import com.josephgibis.springcodegenerator.util.Generator;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
-
-import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class ConfigController implements Initializable {
 
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
 
     // Basic info
-    @FXML private TextField basePackageField;
-    @FXML private TextField sourceDirectoryField;
+    @FXML
+    private TextField basePackageField;
+    @FXML
+    private TextField sourceDirectoryField;
 
     // Files to generate
-    @FXML private CheckBox entityCheckBox;
-    @FXML private CheckBox dtoCheckBox;
-    @FXML private CheckBox repositoryCheckBox;
-    @FXML private CheckBox serviceCheckBox;
-    @FXML private CheckBox controllerCheckBox;
+    @FXML
+    private CheckBox entityCheckBox;
+    @FXML
+    private CheckBox dtoCheckBox;
+    @FXML
+    private CheckBox repositoryCheckBox;
+    @FXML
+    private CheckBox serviceCheckBox;
+    @FXML
+    private CheckBox serviceImplCheckBox;
+    @FXML
+    private CheckBox controllerCheckBox;
 
     // Folder names
-    @FXML private TextField entityPackageField;
-    @FXML private TextField dtoPackageField;
-    @FXML private TextField repositoryPackageField;
-    @FXML private TextField servicePackageField;
-    @FXML private TextField controllerPackageField;
+    @FXML
+    private TextField entityPackageField;
+    @FXML
+    private TextField dtoPackageField;
+    @FXML
+    private TextField repositoryPackageField;
+    @FXML
+    private TextField servicePackageField;
+    @FXML
+    private TextField controllerPackageField;
 
     // Generation settings
-    @FXML private CheckBox overwriteFilesCheckBox;
-    @FXML private CheckBox useLombokCheckBox;
-    @FXML private CheckBox addValidationCheckBox;
-    @FXML private CheckBox generateTestsCheckBox;
-
+    @FXML
+    private CheckBox overwriteFilesCheckBox;
+    @FXML
+    private CheckBox useLombokCheckBox;
+    @FXML
+    private CheckBox addValidationCheckBox;
+    @FXML
+    private CheckBox generateTestsCheckBox;
 
     @FXML
     private void browseSourceDirectory() {
@@ -71,7 +89,7 @@ public class ConfigController implements Initializable {
 
         Generator generator = new Generator();
 
-        for(String entityName : CanvasManager.getEntityNameList()){
+        for (String entityName : CanvasManager.getEntityNameList()) {
             if (config.isGenerateEntity()) {
                 generator.generateEntityFile(entityName);
             }
@@ -83,6 +101,9 @@ public class ConfigController implements Initializable {
             }
             if (config.isGenerateService()) {
                 generator.generateServiceFile(entityName);
+            }
+            if (config.isGenerateServiceImpl()) {
+                generator.generateServiceImplFile(entityName);
             }
             if (config.isGenerateController()) {
                 generator.generateControllerFile(entityName);
@@ -117,6 +138,10 @@ public class ConfigController implements Initializable {
         if (serviceCheckBox != null) {
             serviceCheckBox.selectedProperty().bindBidirectional(config.generateServiceProperty());
         }
+        if (serviceImplCheckBox != null) {
+            serviceImplCheckBox.selectedProperty().bindBidirectional(config.generateServiceProperty());
+        }
+
         if (controllerCheckBox != null) {
             controllerCheckBox.selectedProperty().bindBidirectional(config.generateControllerProperty());
         }

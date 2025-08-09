@@ -14,6 +14,7 @@
         <CheckBox fx:id="dtoCheckBox" selected="true" text="DTO" styleClass="checkbox"/>
         <CheckBox fx:id="repositoryCheckBox" selected="true" text="Repository" styleClass="checkbox"/>
         <CheckBox fx:id="serviceCheckBox" selected="true" text="Service" styleClass="checkbox"/>
+        <CheckBox fx:id="serviceImplCheckBox" selected="true" text="ServiceImpl" styleClass="checkbox"/>
         <CheckBox fx:id="controllerCheckBox" selected="true" text="Controller" styleClass="checkbox"/>
     </HBox>
 
