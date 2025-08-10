@@ -187,6 +187,21 @@ public class Generator {
         }
     }
 
+    public void generateNotFoundExceptionFile(String entityName) {
+        String className = entityName + "NotFoundException";
+        String fileName = className + ".java";
+
+        System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("NotFoundException.java.ftl", entityName);
+            String packagePath = config.getBasePackage() + "." + "exceptions"; // TODO: replace this
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {
+        }
+    }
+
     private String generateFileContentFromTemplate(String templateName, String entityName) {
         try {
             String templatePath = "/com/josephgibis/springcodegenerator/templates/" + templateName;
@@ -258,7 +273,8 @@ public class Generator {
         model.put("servicePackage", config.getServicePackage());
         model.put("controllerPackage", config.getControllerPackage());
         model.put("dtoPackage", config.getDtoPackage());
-        model.put("mappersPackage", "mappers"); // TODO: make mappers field
+        model.put("mapperPackage", "mappers"); // TODO: make mappers field
+        model.put("exceptionPackage", "exceptions");
 
         // assuming entityName is in pascalCase we can make other casings
         String pluralEntityName = StringFormatter.makePlural(entityName);
