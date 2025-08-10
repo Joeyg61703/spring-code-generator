@@ -27,6 +27,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+//TODO refactor to file service
 public class Generator {
 
     private final ProjectConfiguration config = ProjectConfiguration.getInstance();
@@ -134,7 +135,7 @@ public class Generator {
 
         try {
             String fileContent = generateFileContentFromTemplate("ServiceImpl.java.ftl", entityName);
-            String packagePath = config.getBasePackage() + "." + config.getServicePackage();
+            String packagePath = config.getBasePackage() + "." + config.getServicePackage() + ".impl";
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {
@@ -165,6 +166,21 @@ public class Generator {
         try {
             String fileContent = generateFileContentFromTemplate("Repository.java.ftl", entityName);
             String packagePath = config.getBasePackage() + "." + config.getRepositoryPackage();
+            writeToFile(packagePath, fileName, fileContent);
+
+        } catch (Exception e) {
+        }
+    }
+
+    public void generateMapperFile(String entityName) {
+        String className = entityName + "Mapper";
+        String fileName = className + ".java";
+
+        System.out.println(timeStamp() + ": Generating " + fileName);
+
+        try {
+            String fileContent = generateFileContentFromTemplate("Mapper.java.ftl", entityName);
+            String packagePath = config.getBasePackage() + "." + "mappers"; // TODO: replace this
             writeToFile(packagePath, fileName, fileContent);
 
         } catch (Exception e) {
@@ -242,6 +258,7 @@ public class Generator {
         model.put("servicePackage", config.getServicePackage());
         model.put("controllerPackage", config.getControllerPackage());
         model.put("dtoPackage", config.getDtoPackage());
+        model.put("mappersPackage", "mappers"); // TODO: make mappers field
 
         // assuming entityName is in pascalCase we can make other casings
         String pluralEntityName = StringFormatter.makePlural(entityName);
@@ -283,6 +300,7 @@ public class Generator {
 
         // Generation Settings
         model.put("useLombok", config.isUseLombok());
+        model.put("implementServiceBody", true); // TODO: implement checkbox
 
         return model;
     }

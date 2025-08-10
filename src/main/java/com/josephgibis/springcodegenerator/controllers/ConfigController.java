@@ -108,6 +108,7 @@ public class ConfigController implements Initializable {
             if (config.isGenerateController()) {
                 generator.generateControllerFile(entityName);
             }
+            generator.generateMapperFile(entityName);
         }
 
         showAlert("Success", "Files generated successfully!");
